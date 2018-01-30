@@ -9,6 +9,7 @@ aquarium/Temp/
 aquarium/Obj/
 aquarium/Build/
 aquarium/Builds/
+aquarium/Assets/AssetStoreTools*
 
 # Visual Studio 2015 cache directory
 /.vs/
