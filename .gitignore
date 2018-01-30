@@ -32,3 +32,9 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# vim tags
+tags
+
+# macOS files
+.DS_Store
