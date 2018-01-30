@@ -4,11 +4,11 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
-Library
-Temp
-Obj
-Build
-Builds
+aquarium/Library/
+aquarium/Temp/
+aquarium/Obj/
+aquarium/Build/
+aquarium/Builds/
 
 # Visual Studio 2015 cache directory
 /.vs/
