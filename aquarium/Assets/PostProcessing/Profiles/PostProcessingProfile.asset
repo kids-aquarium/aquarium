@@ -9,12 +9,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a3bdb2cd68f901469e7cc149151eb49, type: 3}
-  m_Name: CustomMotionVectorDebugProfile
+  m_Name: PostProcessingProfile
   m_EditorClassIdentifier: 
   debugViews:
     m_Enabled: 1
     m_Settings:
-      mode: 3
+      mode: 0
       depth:
         scale: 1
       motionVectors:
@@ -22,10 +22,10 @@ MonoBehaviour:
         motionImageOpacity: 0
         motionImageAmplitude: 16
         motionVectorsOpacity: 1
-        motionVectorsResolution: 48
+        motionVectorsResolution: 24
         motionVectorsAmplitude: 64
   fog:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
       excludeSkybox: 1
   antialiasing:
@@ -69,12 +69,12 @@ MonoBehaviour:
       screenEdgeMask:
         intensity: 0.03
   depthOfField:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
-      focusDistance: 10
-      aperture: 5.6
-      focalLength: 50
-      useCameraFov: 0
+      focusDistance: 5
+      aperture: 2.3
+      focalLength: 46
+      useCameraFov: 1
       kernelSize: 1
   motionBlur:
     m_Enabled: 0
@@ -85,10 +85,10 @@ MonoBehaviour:
   eyeAdaptation:
     m_Enabled: 0
     m_Settings:
-      lowPercent: 65
+      lowPercent: 45
       highPercent: 95
-      minLuminance: 0.03
-      maxLuminance: 2
+      minLuminance: -5
+      maxLuminance: 1
       keyValue: 0.25
       dynamicKeyValue: 1
       adaptationType: 0
@@ -97,22 +97,22 @@ MonoBehaviour:
       logMin: -8
       logMax: 4
   bloom:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
       bloom:
-        intensity: 1
+        intensity: 0.5
         threshold: 1.1
-        softKnee: 1
-        radius: 6.2
+        softKnee: 0.296
+        radius: 3.62
         antiFlicker: 0
       lensDirt:
         texture: {fileID: 0}
         intensity: 3
   colorGrading:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
       tonemapping:
-        tonemapper: 2
+        tonemapper: 0
         neutralBlackIn: 0.02
         neutralWhiteIn: 10
         neutralBlackOut: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
         temperature: 0
         tint: 0
         hueShift: 0
-        saturation: 1
+        saturation: 1.15
         contrast: 1
       channelMixer:
         red: {x: 1, y: 0, z: 0}
