@@ -14,6 +14,8 @@ public class flockingFish : MonoBehaviour {
 	public float maxSpeed = 0.5f;
 	public float minSpeed = 0.1f;
 
+	public float flockingChance;
+
 //-----------------------------------------------------------------------------
 
 
@@ -22,6 +24,7 @@ public class flockingFish : MonoBehaviour {
 
 		speed = Random.Range(minSpeed, maxSpeed);
 		turn = false;
+		flockingChance = Random.Range(20, 60);
 		
 	}
 
@@ -35,7 +38,7 @@ public class flockingFish : MonoBehaviour {
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
 			speed = Random.Range(minSpeed, maxSpeed);
 		} else {
-			if(Random.Range(0, 25) < 5) ApplyRules();
+			if(Random.Range(0, 100) < flockingChance) ApplyRules();
 			}
 
 		transform.Translate(0, 0, Time.deltaTime * speed);
