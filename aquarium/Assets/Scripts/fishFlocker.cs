@@ -7,15 +7,14 @@ public class FishFlocker : MonoBehaviour {
 	//Setting the seekPosition in the start/update functions will be changed once we have the actual dimesions of our 'aquarium'
 	public Vector3 seekPosition;
 
-	//The aquariumSize Vector is a placeholder till we set up the actual 'aquarium'.
-	public Vector3 aquariumSize;
+	//The aquariumDistance Vector is a placeholder till we set up the actual 'aquarium'.
+	public Vector3 aquariumDistance;
 
 //-----------------------------------------------------------------------------
 
 	// Use this for initialization
 	void Start () {
-		aquariumSize = new Vector3(4, 3, 2);
-
+		aquariumDistance = new Vector3(20, 10, 20);
 		generateSeekPosition();
 		
 	}
@@ -48,10 +47,12 @@ public List<GameObject> getAllFish(){
 
 }
 
+//-----------------------------------------------------------------------------
+
 void generateSeekPosition(){
-	seekPosition = new Vector3(Random.Range(-aquariumSize.x, aquariumSize.x),
-							Random.Range(-aquariumSize.y, aquariumSize.y),
-							Random.Range(-aquariumSize.z, aquariumSize.z));
+	seekPosition = new Vector3(Random.Range(-aquariumDistance.x, aquariumDistance.x),
+							Random.Range(-aquariumDistance.y, aquariumDistance.y),
+							Random.Range(-aquariumDistance.z, aquariumDistance.z));
 }
 
 

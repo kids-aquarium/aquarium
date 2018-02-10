@@ -36,7 +36,7 @@ public class FlockingFish : MonoBehaviour {
 		if(turn){
 			Vector3 dir = otherDir - this.transform.position;
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
-			speed = Random.Range(minSpeed, maxSpeed);
+			// speed = Random.Range(minSpeed, maxSpeed);
 		} else {
 			if(Random.Range(0, 100) < flockingChance) ApplyRules();
 			}
@@ -47,11 +47,7 @@ public class FlockingFish : MonoBehaviour {
 //-----------------------------------------------------------------------------
 
 	void ApplyRules(){
-
-		//Instead of calling this function everytime, should I store a local list
-		//which I update with this function call everytime that there is a new fish?
-		//For that we'd need to set up listeners to the actual spawning code - necessary
-		//or is this good enough?
+		
 		List<GameObject> fishes = GetComponentInParent<FishFlocker>().getAllFish();
 
 		Vector3 fCentre = Vector3.zero;
@@ -100,6 +96,7 @@ public class FlockingFish : MonoBehaviour {
 
 		if(!turn){
 			otherDir = this.transform.position - c.collider.gameObject.transform.position;
+			speed = Random.Range(minSpeed, maxSpeed);
 		}
 
 		turn = true;
@@ -111,6 +108,7 @@ public class FlockingFish : MonoBehaviour {
 	void OnCollisionExit(Collision c){
 
 		turn = false;
+		speed = Random.Range(minSpeed, maxSpeed);
 
 	}
 
