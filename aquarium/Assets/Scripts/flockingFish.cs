@@ -41,7 +41,7 @@ public class FlockingFish : MonoBehaviour {
 			if(Random.Range(0, 100) < flockingChance) ApplyRules();
 			}
 
-		transform.Translate(0, 0, Time.deltaTime * speed);
+		transform.Translate(transform.forward * speed * Time.deltaTime);
 		}
 
 //-----------------------------------------------------------------------------
