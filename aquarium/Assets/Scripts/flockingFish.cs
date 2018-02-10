@@ -48,6 +48,10 @@ public class FlockingFish : MonoBehaviour {
 
 	void ApplyRules(){
 
+		//Instead of calling this function everytime, should I store a local list
+		//which I update with this function call everytime that there is a new fish?
+		//For that we'd need to set up listeners to the actual spawning code - necessary
+		//or is this good enough?
 		List<GameObject> fishes = GetComponentInParent<FishFlocker>().getAllFish();
 
 		Vector3 fCentre = Vector3.zero;

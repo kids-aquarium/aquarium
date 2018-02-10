@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class FishFlocker : MonoBehaviour {
 
+	//Setting the seekPosition in the start/update functions will be changed once we have the actual dimesions of our 'aquarium'
 	public Vector3 seekPosition;
+
+	//The aquariumSize Vector is a placeholder till we set up the actual 'aquarium'.
 	public Vector3 aquariumSize;
 
 //-----------------------------------------------------------------------------
@@ -13,9 +16,7 @@ public class FishFlocker : MonoBehaviour {
 	void Start () {
 		aquariumSize = new Vector3(4, 3, 2);
 
-		seekPosition = new Vector3(Random.Range(-aquariumSize.x, aquariumSize.x),
-							Random.Range(-aquariumSize.y, aquariumSize.y),
-							Random.Range(-aquariumSize.z, aquariumSize.z));
+		generateSeekPosition();
 		
 	}
 
@@ -25,9 +26,7 @@ public class FishFlocker : MonoBehaviour {
 	void Update () {
 
 		if(Random.Range(0, 1000) < 10){
-			seekPosition = new Vector3(Random.Range(-aquariumSize.x, aquariumSize.x),
-								Random.Range(-aquariumSize.y, aquariumSize.y),
-								Random.Range(-aquariumSize.z, aquariumSize.z));
+			generateSeekPosition();
 		}
 		
 	}
@@ -47,6 +46,12 @@ public List<GameObject> getAllFish(){
 
 	return allFish;
 
+}
+
+void generateSeekPosition(){
+	seekPosition = new Vector3(Random.Range(-aquariumSize.x, aquariumSize.x),
+							Random.Range(-aquariumSize.y, aquariumSize.y),
+							Random.Range(-aquariumSize.z, aquariumSize.z));
 }
 
 
