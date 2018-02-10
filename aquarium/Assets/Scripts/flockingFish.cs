@@ -5,8 +5,8 @@ using UnityEngine;
 public class FlockingFish : MonoBehaviour {
 	public float speed;
 	float rotationSpeed = 3.0f;
-	float neighbourDistance = 4.0f;
-	float avoidDist = 1.0f;
+	float neighbourDistance = 6.0f;
+	float avoidDist = 2.0f;
 
 	Vector3 otherDir;
 	bool turn;
@@ -24,7 +24,7 @@ public class FlockingFish : MonoBehaviour {
 
 		speed = Random.Range(minSpeed, maxSpeed);
 		turn = false;
-		flockingChance = Random.Range(20, 60);
+		flockingChance = Random.Range(20, 40);
 		
 	}
 
@@ -36,18 +36,19 @@ public class FlockingFish : MonoBehaviour {
 		if(turn){
 			Vector3 dir = otherDir - this.transform.position;
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
+			
 			// speed = Random.Range(minSpeed, maxSpeed);
 		} else {
 			if(Random.Range(0, 100) < flockingChance) ApplyRules();
 			}
 
 		transform.Translate(transform.forward * speed * Time.deltaTime);
-		}
+	}
 
 //-----------------------------------------------------------------------------
 
 	void ApplyRules(){
-		
+
 		List<GameObject> fishes = GetComponentInParent<FishFlocker>().getAllFish();
 
 		Vector3 fCentre = Vector3.zero;
@@ -95,7 +96,7 @@ public class FlockingFish : MonoBehaviour {
 	void OnCollisionEnter(Collision c){
 
 		if(!turn){
-			otherDir = this.transform.position - c.collider.gameObject.transform.position;
+			otherDir = this.transform.position - c.gameObject.transform.position;
 			speed = Random.Range(minSpeed, maxSpeed);
 		}
 

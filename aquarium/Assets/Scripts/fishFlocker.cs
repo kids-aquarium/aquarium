@@ -36,12 +36,11 @@ public List<GameObject> getAllFish(){
 
 	List<GameObject> allFish = new List<GameObject>();
 
-		int numChildren = transform.childCount;
+	foreach(Transform child in transform){
+		allFish.Add(child.gameObject);
+	}
 
-		for(int i = 0; i < numChildren; i++){
-			GameObject g = transform.GetChild(i).gameObject;
-			allFish.Add(g);
-		}
+	// Debug.Log(allFish.Count);
 
 	return allFish;
 
