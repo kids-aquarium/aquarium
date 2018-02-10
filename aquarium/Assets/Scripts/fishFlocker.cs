@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FishFlocker : MonoBehaviour {
 
-	public List<GameObject> allFish = new List<GameObject>();
 	public Vector3 seekPosition;
 	public Vector3 aquariumSize;
 
@@ -12,14 +11,6 @@ public class FishFlocker : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-		int numChildren = transform.childCount;
-
-		for(int i = 0; i < numChildren; i++){
-			GameObject g = transform.GetChild(i).gameObject;
-			allFish.Add(g);
-		}
-
 		aquariumSize = new Vector3(4, 3, 2);
 
 		seekPosition = new Vector3(Random.Range(-aquariumSize.x, aquariumSize.x),
@@ -43,18 +34,20 @@ public class FishFlocker : MonoBehaviour {
 
 //-----------------------------------------------------------------------------
 
-	void AddNewFish(){
+public List<GameObject> getAllFish(){
+
+	List<GameObject> allFish = new List<GameObject>();
+
 		int numChildren = transform.childCount;
-		
-		if(numChildren>allFish.Count){
-			GameObject newFish = transform.GetChild(allFish.Count + 1).gameObject;
-			allFish.Add(newFish);
+
+		for(int i = 0; i < numChildren; i++){
+			GameObject g = transform.GetChild(i).gameObject;
+			allFish.Add(g);
 		}
 
-	}
+	return allFish;
 
-
-//-----------------------------------------------------------------------------
+}
 
 
 }

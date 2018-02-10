@@ -48,7 +48,7 @@ public class FlockingFish : MonoBehaviour {
 
 	void ApplyRules(){
 
-		List<GameObject> fishes = GetComponentInParent<FishFlocker>().allFish;
+		List<GameObject> fishes = GetComponentInParent<FishFlocker>().getAllFish();
 
 		Vector3 fCentre = Vector3.zero;
 		Vector3 fAvoid = Vector3.zero;
