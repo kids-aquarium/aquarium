@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class fishFlocker : MonoBehaviour {
+public class FishFlocker : MonoBehaviour {
 
 	public List<GameObject> allFish = new List<GameObject>();
 	public Vector3 seekPosition;

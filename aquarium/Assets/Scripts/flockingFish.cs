@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class flockingFish : MonoBehaviour {
+public class FlockingFish : MonoBehaviour {
 	public float speed;
 	float rotationSpeed = 3.0f;
 	float neighbourDistance = 4.0f;
@@ -48,14 +48,14 @@ public class flockingFish : MonoBehaviour {
 
 	void ApplyRules(){
 
-		List<GameObject> fishes = GetComponentInParent<fishFlocker>().allFish;
+		List<GameObject> fishes = GetComponentInParent<FishFlocker>().allFish;
 
 		Vector3 fCentre = Vector3.zero;
 		Vector3 fAvoid = Vector3.zero;
 		float groupSpeed = 0.1f;
 		float distance;
 
-		Vector3 seek = GetComponentInParent<fishFlocker>().seekPosition;
+		Vector3 seek = GetComponentInParent<FishFlocker>().seekPosition;
 
 		int groupSize = 0;
 
@@ -71,7 +71,7 @@ public class flockingFish : MonoBehaviour {
 						fAvoid = fAvoid + (this.transform.position - other.transform.position);
 					}
 
-					groupSpeed += other.GetComponent<flockingFish>().speed;
+					groupSpeed += other.GetComponent<FlockingFish>().speed;
 				}
 			}
 		}
