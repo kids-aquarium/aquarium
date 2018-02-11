@@ -14,7 +14,7 @@ public class FishFlocker : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		aquariumDistance = new Vector3(20, 10, 20);
+		aquariumDistance = new Vector3(10, 5, 10);
 		generateSeekPosition();
 		
 	}
@@ -24,7 +24,7 @@ public class FishFlocker : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if(Random.Range(0, 1000) < 10){
+		if(Random.Range(0, 1000) < 5){
 			generateSeekPosition();
 		}
 		
