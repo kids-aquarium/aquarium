@@ -101,7 +101,7 @@ public class FlockingFish : MonoBehaviour {
 		if (cohesion != null) {
 			Vector3 cohesionHeading = cohesion.Value - transform.position;
 			cohesionHeading.Normalize ();
-			Debug.DrawRay (transform.position, cohesionHeading, Color.red);
+			//Debug.DrawRay (transform.position, cohesionHeading, Color.red);
 			targetHeading += cohesionHeading * parameters.cohesionWeight;
 			//DrawPoint (cohesion.Value, Color.red, 1);
 			//turnTowardsWorldPosition (cohesion.Value);
@@ -109,7 +109,7 @@ public class FlockingFish : MonoBehaviour {
 		if (separation != null) {
 			Vector3 separationHeading = separation.Value - transform.position;
 			separationHeading.Normalize ();
-			Debug.DrawRay (transform.position, separationHeading, Color.green);
+			//Debug.DrawRay (transform.position, separationHeading, Color.green);
 			targetHeading += separationHeading * parameters.separationWeight;
 			//DrawPoint (separation.Value, Color.green, 1);
 			//turnTowardsWorldPosition (separation.Value);
@@ -117,7 +117,7 @@ public class FlockingFish : MonoBehaviour {
 		if (alignment != null) {
 			Vector3 alignmentHeading = alignment.Value - transform.position;
 			alignmentHeading.Normalize ();
-			Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
+			//Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
 			targetHeading += alignmentHeading * parameters.alignmentWeight;
 			//DrawPoint (alignment.Value, Color.blue, 1);
 			//turnTowardsWorldPosition (alignment.Value);
@@ -126,7 +126,7 @@ public class FlockingFish : MonoBehaviour {
 
 		//DrawPoint (target, Color.yellow, 1);
 		//turnTowards (transform.TransformPoint(separation));
-		Debug.DrawRay(transform.position, targetHeading);
+		//Debug.DrawRay(transform.position, targetHeading);
 		turnTowardsHeading(targetHeading);
 	}
 
