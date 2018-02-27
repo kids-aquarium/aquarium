@@ -39,6 +39,12 @@ public class FlockingParameters {
 	public float alignmentWeight   = 1.0f;
 	public float cohesionDistance  = 6.0f;
 	public float cohesionWeight    = 1.0f;
+	public float minimumX          = -50.0f;
+	public float maximumX          = 50.0f;
+	public float minimumY          = 0.0f;
+	public float maximumY          = 5.0f;
+	public float minimumZ          = 0.0f;
+	public float maximumZ          = 20.0f;
 };
 
 public class FlockingFish : MonoBehaviour {
@@ -49,6 +55,7 @@ public class FlockingFish : MonoBehaviour {
 
 	private readonly VectorPid angularVelocityController = new VectorPid(33.7766f, 0, 0.2553191f);
 	private readonly VectorPid headingController = new VectorPid(9.244681f, 0, 0.06382979f);
+	private readonly VectorPid upController = new VectorPid(9.244681f, 0, 0.06382979f); // TODO balance
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
@@ -97,6 +104,8 @@ public class FlockingFish : MonoBehaviour {
 		Vector3? cohesion = Cohere ();
 		Vector3? alignment = Align ();
 
+		Vector3? bounds = CheckBoundaries (); // FIXME if out of bounds, maybe skip all other checks
+
 
 		if (cohesion != null) {
 			Vector3 cohesionHeading = cohesion.Value - transform.position;
@@ -121,6 +130,10 @@ public class FlockingFish : MonoBehaviour {
 			targetHeading += alignmentHeading * parameters.alignmentWeight;
 			//DrawPoint (alignment.Value, Color.blue, 1);
 			//turnTowardsWorldPosition (alignment.Value);
+		}
+
+		if (bounds != null) {
+			targetHeading = bounds.Value - transform.position;
 		}
 		targetHeading.Normalize ();
 
@@ -159,7 +172,11 @@ public class FlockingFish : MonoBehaviour {
 		rb.AddTorque(headingCorrection);
 	}
 
-	void turnTowardsHeading(Vector3 desiredHeading) {
+	void turnTowardsHeading(Vector3 desiredHeading, Vector3? desiredUp = null) {
+		if (desiredUp == null)
+			desiredUp = Vector3.up;
+		// local y points up, up control should happen as rotations about x and z axes
+		
 		var angularVelocityError = rb.angularVelocity * -1;
 		//Debug.DrawRay(transform.position, rb.angularVelocity * 10, Color.black);
 
@@ -177,6 +194,11 @@ public class FlockingFish : MonoBehaviour {
 		var headingCorrection = headingController.Update(headingError, Time.deltaTime);
 
 		rb.AddTorque(headingCorrection);
+
+		var currentUp = transform.up;
+		var upError = Vector3.Cross (currentUp, desiredUp.Value);
+		var upCorrection = upController.Update (upError, Time.deltaTime);
+		rb.AddTorque (upCorrection);
 	}
 
 	void MatchVelocity() {
@@ -184,6 +206,21 @@ public class FlockingFish : MonoBehaviour {
 			rb.AddRelativeForce (Vector3.forward);
 		if (rb.velocity.magnitude >= parameters.maxSpeed)
 			rb.AddRelativeForce (Vector3.back);
+	}
+
+	Vector3? CheckBoundaries() {
+		if (transform.position.x <  parameters.minimumX ||
+		    transform.position.x >= parameters.maximumX ||
+		    transform.position.y <  parameters.minimumY ||
+		    transform.position.y >= parameters.maximumY ||
+		    transform.position.z <  parameters.minimumZ ||
+		    transform.position.z >= parameters.maximumZ) {
+			Vector3 c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,
+				                     (parameters.minimumY + parameters.maximumY) / 2.0f,
+				                     (parameters.minimumZ + parameters.maximumZ) / 2.0f);
+			return c;
+		}
+		else return null;
 	}
 
 	Vector3? Separate() {
