@@ -15,25 +15,24 @@ public class InstantFish : MonoBehaviour {
 	void Update () {
 
 		if(Input.GetKeyUp("1")){
-			GameObject newFish = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-			MaterialManager mat = newFish.GetComponent<MaterialManager>();
-			mat.textureName = "fishTexTest001";
-			newFish.transform.parent = this.transform;
+			InstanFishWithTexture("fishTexTest001");
 		}
 
 		if(Input.GetKeyUp("2")){
-			GameObject newFish = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-			MaterialManager mat = newFish.GetComponent<MaterialManager>();
-			mat.textureName = "fishTexTest002";
-			newFish.transform.parent = this.transform;
+			InstanFishWithTexture("fishTextTest002");
 		}
 
 		if(Input.GetKeyUp("3")){
-			GameObject newFish = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-			MaterialManager mat = newFish.GetComponent<MaterialManager>();
-			mat.textureName = "fishTexTest003";
-			newFish.transform.parent = this.transform;
+			InstanFishWithTexture("fishTexTest003");
 		}
 		
 	}
+
+	void InstanFishWithTexture(string _textureName){
+		GameObject newFish = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+			MaterialManager mat = newFish.GetComponent<MaterialManager>();
+			mat.textureName = _textureName;
+			newFish.transform.parent = this.transform;
+	}
+
 }
