@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class InstantFish : MonoBehaviour {
 	public GameObject prefab;
-
-
+	
 	// Use this for initialization
 	void Start () {
 		
@@ -19,7 +18,7 @@ public class InstantFish : MonoBehaviour {
 		}
 
 		if(Input.GetKeyUp("2")){
-			InstanFishWithTexture("fishTextTest002");
+			InstanFishWithTexture("fishTexTest002");
 		}
 
 		if(Input.GetKeyUp("3")){
@@ -30,8 +29,7 @@ public class InstantFish : MonoBehaviour {
 
 	void InstanFishWithTexture(string _textureName){
 		GameObject newFish = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-			MaterialManager mat = newFish.GetComponent<MaterialManager>();
-			mat.textureName = _textureName;
+			newFish.GetComponent<MaterialManager>().loadTexture(_textureName);
 			newFish.transform.parent = this.transform;
 	}
 

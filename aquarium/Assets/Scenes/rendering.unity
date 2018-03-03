@@ -2703,6 +2703,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1015320427}
   - component: {fileID: 1015320426}
+  - component: {fileID: 1015320428}
   m_Layer: 0
   m_Name: Instantiator
   m_TagString: Untagged
@@ -2735,6 +2736,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1015320428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1015320425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7b73b2bb021848e899c2c4d6af43616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seekPosition: {x: 0, y: 0, z: 0}
+  aquariumDistance: {x: 0, y: 0, z: 0}
 --- !u!1001 &1049977077
 Prefab:
   m_ObjectHideFlags: 0
