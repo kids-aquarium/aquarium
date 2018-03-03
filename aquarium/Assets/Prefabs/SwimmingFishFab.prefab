@@ -917,4 +917,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e1eb498fd79149ca81cf51665354563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textureName: 
   fishMaterial: []

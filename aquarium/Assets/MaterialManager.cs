@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MaterialManager : MonoBehaviour {
 	
+	public string textureName;
 	public Component[] fishMaterial;
 
 	// Use this for initialization
@@ -12,7 +13,7 @@ public class MaterialManager : MonoBehaviour {
 		fishMaterial = GetComponentsInChildren<Renderer>();
 
 		foreach(Renderer rend in fishMaterial){
-			Texture t = Resources.Load("fishTexTest001") as Texture;
+			Texture t = Resources.Load(textureName) as Texture;
 			
 			if (t == null)
 			{
