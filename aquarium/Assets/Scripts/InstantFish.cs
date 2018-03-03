@@ -14,20 +14,20 @@ public class InstantFish : MonoBehaviour {
 	void Update () {
 
 		if(Input.GetKeyUp("1")){
-			InstanFishWithTexture("fishTexTest001");
+			InstantFishWithTexture("fishTexTest001");
 		}
 
 		if(Input.GetKeyUp("2")){
-			InstanFishWithTexture("fishTexTest002");
+			InstantFishWithTexture("fishTexTest002");
 		}
 
 		if(Input.GetKeyUp("3")){
-			InstanFishWithTexture("fishTexTest003");
+			InstantFishWithTexture("fishTexTest003");
 		}
 		
 	}
 
-	void InstanFishWithTexture(string _textureName){
+	void InstantFishWithTexture(string _textureName){
 		GameObject newFish = Instantiate(prefab, Vector3.zero, Quaternion.identity);
 			newFish.GetComponent<MaterialManager>().loadTexture(_textureName);
 			newFish.transform.parent = this.transform;
