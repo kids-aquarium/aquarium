@@ -32,7 +32,7 @@ public class InstantFish : MonoBehaviour {
 		
 	}
 
-	void InstantFishWithTexture(string _textureName){
+	public void InstantFishWithTexture(string _textureName){
 		GameObject newFish = Instantiate(prefab, Vector3.zero, Quaternion.identity);
 		newFish.GetComponent<setMaterial>().LoadTexture(_textureName);
 		newFish.transform.parent = this.transform;
