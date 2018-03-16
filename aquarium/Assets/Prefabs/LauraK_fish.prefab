@@ -20,7 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4686017132707782}
   - component: {fileID: 95204582975969454}
-  - component: {fileID: 114669610518080756}
+  - component: {fileID: 114151477276851650}
+  - component: {fileID: 114223235334145550}
   m_Layer: 0
   m_Name: LauraK_fish
   m_TagString: Untagged
@@ -204,7 +205,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114669610518080756
+--- !u!114 &114151477276851650
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -212,9 +213,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1295541271461026}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dee8a9e5ad991428b8aeda006dbc1d51, type: 3}
+  m_Script: {fileID: 11500000, guid: c31b27ec640e14f7189c551a1f9bbc3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114223235334145550
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1295541271461026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed4310ed26bd84789be73907a2dbbd3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  maxSpeed: 0.5
+  minSpeed: 0.1
+  flockingChance: 0
 --- !u!137 &137423756972365048
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

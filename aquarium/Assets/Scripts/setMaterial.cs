@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadTexture : MonoBehaviour {
+public class setMaterial : MonoBehaviour {
 
-		Component[] fishMaterial;
+	Component[] fishMaterial;
 
 	// Use this for initialization
 	void Start () {
 
-		loadTexture("fishTexTest004");
+		// LoadTexture("fishTexTest004");
 		
 	}
 	
@@ -18,7 +18,7 @@ public class LoadTexture : MonoBehaviour {
 		
 	}
 
-	public void loadTexture(string _texture){
+	public void LoadTexture(string _texture){
 		fishMaterial = GetComponentsInChildren<Renderer>();
 
 		foreach(Renderer rend in fishMaterial){
