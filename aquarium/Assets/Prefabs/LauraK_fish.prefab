@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114151477276851650}
   - component: {fileID: 114223235334145550}
   - component: {fileID: 54714993213726116}
+  - component: {fileID: 65734018747319554}
   m_Layer: 0
   m_Name: LauraK_fish
   m_TagString: Untagged
@@ -180,15 +181,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1295541271461026}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5220695, y: 0.35790873, z: -1.5521364}
+  m_LocalRotation: {x: -0, y: 0.6649498, z: -0, w: 0.7468881}
+  m_LocalPosition: {x: -0.95, y: 0.4, z: -0.7}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children:
   - {fileID: 4100974155229900}
   - {fileID: 4537881432171936}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 83.357, z: 0}
 --- !u!54 &54714993213726116
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -204,6 +205,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &65734018747319554
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1295541271461026}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.005, y: 0.01, z: 0.015}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!95 &95204582975969454
 Animator:
   serializedVersion: 3
@@ -254,12 +267,12 @@ MonoBehaviour:
     alignmentWeight: 2
     cohesionDistance: 80
     cohesionWeight: 1
-    minimumX: -33
-    maximumX: 33
-    minimumY: 30.5
-    maximumY: 96.5
-    minimumZ: -17.5
-    maximumZ: -2.5
+    minimumX: -16.5
+    maximumX: 16.5
+    minimumY: -15
+    maximumY: 15
+    minimumZ: 6
+    maximumZ: 21
 --- !u!137 &137423756972365048
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
