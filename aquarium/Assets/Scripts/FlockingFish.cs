@@ -46,6 +46,8 @@ public class FlockingParameters {
 	public float maximumY          = 5.0f;
 	public float minimumZ          = 0.0f;
 	public float maximumZ          = 20.0f;
+	public Vector3 destination;
+	public float destinationWeight;
 };
 
 public class FlockingFish : MonoBehaviour {
@@ -104,6 +106,7 @@ public class FlockingFish : MonoBehaviour {
 		Vector3? separation = Separate ();
 		Vector3? cohesion = Cohere ();
 		Vector3? alignment = Align ();
+		Vector3? destination = Destination ();
 
 		//Vector3? bounds = CheckBoundaries ();
 		Vector3? bounds = CheckViewFrustum ();
@@ -131,6 +134,11 @@ public class FlockingFish : MonoBehaviour {
 				targetHeading += alignmentHeading * parameters.alignmentWeight;
 				//DrawPoint (alignment.Value, Color.blue, 1);
 				//turnTowardsWorldPosition (alignment.Value);
+			}
+			if (destination != null) {
+				Vector3 destinationHeading = destination.Value - transform.position;
+				destinationHeading.Normalize ();
+				targetHeading += destinationHeading * parameters.destinationWeight;
 			}
 		}
 
@@ -235,9 +243,17 @@ public class FlockingFish : MonoBehaviour {
 			transform.position.z >= parameters.minimumZ && transform.position.z < parameters.maximumZ) {
 			return null;
 		} else {
-			Vector3 c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,
-									 (parameters.minimumY + parameters.maximumY) / 2.0f,
-									 (parameters.minimumZ + parameters.maximumZ) / 2.0f);
+			bool keepCurrentY = true;
+			Vector3 c;
+			if (keepCurrentY) {
+				c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,
+					transform.position.y,
+					(parameters.minimumZ + parameters.maximumZ) / 2.0f);
+			} else {
+				c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,
+					           (parameters.minimumY + parameters.maximumY) / 2.0f,
+					           (parameters.minimumZ + parameters.maximumZ) / 2.0f);
+			}
 			return c;
 		}
 	}
@@ -307,6 +323,10 @@ public class FlockingFish : MonoBehaviour {
 		c.Normalize ();
 		//Debug.DrawRay(transform.position, c);
 		return c + transform.position;
+	}
+
+	Vector3? Destination() {
+		return parameters.destination;
 	}
 }
 

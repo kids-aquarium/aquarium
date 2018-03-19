@@ -261,6 +261,8 @@ MonoBehaviour:
     maximumY: 10
     minimumZ: -5
     maximumZ: 20
+    destination: {x: 0, y: 7.19, z: 0}
+    destinationWeight: 1.55
   angularVelocityController:
     pFactor: 2
     iFactor: 0.00025
