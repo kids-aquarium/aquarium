@@ -230,7 +230,9 @@ public class FlockingFish : MonoBehaviour {
 
 	Vector3? CheckViewFrustum() {
 		Vector2 screenPoint = Camera.main.WorldToScreenPoint (transform.position);
-		if (screenPoint.x >= 0 && screenPoint.x < Screen.width && screenPoint.y >= 0 && screenPoint.y < Screen.height) {
+		if (screenPoint.x >= 0 && screenPoint.x < Screen.width &&
+			screenPoint.y >= 0 && screenPoint.y < Screen.height &&
+			transform.position.z >= parameters.minimumZ && transform.position.z < parameters.maximumZ) {
 			return null;
 		} else {
 			Vector3 c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,

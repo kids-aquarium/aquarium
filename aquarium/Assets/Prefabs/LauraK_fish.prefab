@@ -246,8 +246,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parameters:
     breed: 0
-    minSpeed: 0.99
-    maxSpeed: 2.18
+    minSpeed: 1.99
+    maxSpeed: 4.27
     rotationSpeed: 3
     desiredSeparation: 5
     separationWeight: 3
@@ -259,8 +259,8 @@ MonoBehaviour:
     maximumX: 15
     minimumY: -10
     maximumY: 10
-    minimumZ: -8
-    maximumZ: 8
+    minimumZ: -5
+    maximumZ: 20
   angularVelocityController:
     pFactor: 2
     iFactor: 0.00025
