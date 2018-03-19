@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class VectorPid
 {
 	public float pFactor, iFactor, dFactor;
@@ -53,9 +54,9 @@ public class FlockingFish : MonoBehaviour {
 	Rigidbody rb;
 
 
-	private readonly VectorPid angularVelocityController = new VectorPid(33.7766f, 0, 0.2553191f);
-	private readonly VectorPid headingController = new VectorPid(9.244681f, 0, 0.06382979f);
-	private readonly VectorPid upController = new VectorPid(9.244681f, 0, 0.06382979f); // TODO balance
+	public VectorPid angularVelocityController = new VectorPid(0f, 0f, 0f);
+	public VectorPid headingController = new VectorPid(0f, 0f, 0f); // TODO sb private readonly
+	public VectorPid upController = new VectorPid(0f, 0f, 0f); // TODO balance
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
@@ -104,42 +105,44 @@ public class FlockingFish : MonoBehaviour {
 		Vector3? cohesion = Cohere ();
 		Vector3? alignment = Align ();
 
-		Vector3? bounds = CheckBoundaries (); // FIXME if out of bounds, maybe skip all other checks
-
-
-		if (cohesion != null) {
-			Vector3 cohesionHeading = cohesion.Value - transform.position;
-			cohesionHeading.Normalize ();
-			//Debug.DrawRay (transform.position, cohesionHeading, Color.red);
-			targetHeading += cohesionHeading * parameters.cohesionWeight;
-			//DrawPoint (cohesion.Value, Color.red, 1);
-			//turnTowardsWorldPosition (cohesion.Value);
-		}
-		if (separation != null) {
-			Vector3 separationHeading = separation.Value - transform.position;
-			separationHeading.Normalize ();
-			//Debug.DrawRay (transform.position, separationHeading, Color.green);
-			targetHeading += separationHeading * parameters.separationWeight;
-			//DrawPoint (separation.Value, Color.green, 1);
-			//turnTowardsWorldPosition (separation.Value);
-		}
-		if (alignment != null) {
-			Vector3 alignmentHeading = alignment.Value - transform.position;
-			alignmentHeading.Normalize ();
-			//Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
-			targetHeading += alignmentHeading * parameters.alignmentWeight;
-			//DrawPoint (alignment.Value, Color.blue, 1);
-			//turnTowardsWorldPosition (alignment.Value);
+		//Vector3? bounds = CheckBoundaries ();
+		Vector3? bounds = CheckViewFrustum ();
+		if (bounds == null) {
+			if (cohesion != null) {
+				Vector3 cohesionHeading = cohesion.Value - transform.position;
+				cohesionHeading.Normalize ();
+				//Debug.DrawRay (transform.position, cohesionHeading, Color.red);
+				targetHeading += cohesionHeading * parameters.cohesionWeight;
+				//DrawPoint (cohesion.Value, Color.red, 1);
+				//turnTowardsWorldPosition (cohesion.Value);
+			}
+			if (separation != null) {
+				Vector3 separationHeading = separation.Value - transform.position;
+				separationHeading.Normalize ();
+				//Debug.DrawRay (transform.position, separationHeading, Color.green);
+				targetHeading += separationHeading * parameters.separationWeight;
+				//DrawPoint (separation.Value, Color.green, 1);
+				//turnTowardsWorldPosition (separation.Value);
+			}
+			if (alignment != null) {
+				Vector3 alignmentHeading = alignment.Value - transform.position;
+				alignmentHeading.Normalize ();
+				//Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
+				targetHeading += alignmentHeading * parameters.alignmentWeight;
+				//DrawPoint (alignment.Value, Color.blue, 1);
+				//turnTowardsWorldPosition (alignment.Value);
+			}
 		}
 
 		if (bounds != null) {
-			targetHeading = bounds.Value - transform.position;
+			targetHeading = bounds.Value - transform.localPosition;
+			Debug.DrawRay(transform.position, targetHeading);
 		}
 		targetHeading.Normalize ();
 
 		//DrawPoint (target, Color.yellow, 1);
 		//turnTowards (transform.TransformPoint(separation));
-		//Debug.DrawRay(transform.position, targetHeading);
+		Debug.DrawRay(transform.position, targetHeading);
 		turnTowardsHeading(targetHeading);
 	}
 
@@ -178,11 +181,12 @@ public class FlockingFish : MonoBehaviour {
 		// local y points up, up control should happen as rotations about x and z axes
 		
 		var angularVelocityError = rb.angularVelocity * -1;
+		//Debug.Log (angularVelocityError);
 		//Debug.DrawRay(transform.position, rb.angularVelocity * 10, Color.black);
 
-		var angularVelocityCorrection = angularVelocityController.Update(angularVelocityError, Time.deltaTime);
-		//Debug.DrawRay(transform.position, angularVelocityCorrection, Color.green);
 
+		var angularVelocityCorrection = angularVelocityController.Update(angularVelocityError, Time.deltaTime);
+		Debug.DrawRay(transform.position, angularVelocityCorrection, Color.red);
 		rb.AddTorque(angularVelocityCorrection);
 
 		//Debug.DrawRay(transform.position, desiredHeading, Color.magenta);
@@ -192,12 +196,13 @@ public class FlockingFish : MonoBehaviour {
 
 		var headingError = Vector3.Cross(currentHeading, desiredHeading);
 		var headingCorrection = headingController.Update(headingError, Time.deltaTime);
-
+		Debug.DrawRay(transform.position, headingCorrection, Color.green);
 		rb.AddTorque(headingCorrection);
 
 		var currentUp = transform.up;
 		var upError = Vector3.Cross (currentUp, desiredUp.Value);
 		var upCorrection = upController.Update (upError, Time.deltaTime);
+		Debug.DrawRay(transform.position, upCorrection, Color.blue);
 		rb.AddTorque (upCorrection);
 	}
 
@@ -209,18 +214,30 @@ public class FlockingFish : MonoBehaviour {
 	}
 
 	Vector3? CheckBoundaries() {
-		if (transform.position.x <  parameters.minimumX ||
-		    transform.position.x >= parameters.maximumX ||
-		    transform.position.y <  parameters.minimumY ||
-		    transform.position.y >= parameters.maximumY ||
-		    transform.position.z <  parameters.minimumZ ||
-		    transform.position.z >= parameters.maximumZ) {
+		if (transform.localPosition.x <  parameters.minimumX ||
+			transform.localPosition.x >= parameters.maximumX ||
+			transform.localPosition.y <  parameters.minimumY ||
+			transform.localPosition.y >= parameters.maximumY ||
+			transform.localPosition.z <  parameters.minimumZ ||
+			transform.localPosition.z >= parameters.maximumZ) {
 			Vector3 c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,
 				                     (parameters.minimumY + parameters.maximumY) / 2.0f,
 				                     (parameters.minimumZ + parameters.maximumZ) / 2.0f);
 			return c;
 		}
 		else return null;
+	}
+
+	Vector3? CheckViewFrustum() {
+		Vector2 screenPoint = Camera.main.WorldToScreenPoint (transform.position);
+		if (screenPoint.x >= 0 && screenPoint.x < Screen.width && screenPoint.y >= 0 && screenPoint.y < Screen.height) {
+			return null;
+		} else {
+			Vector3 c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,
+									 (parameters.minimumY + parameters.maximumY) / 2.0f,
+									 (parameters.minimumZ + parameters.maximumZ) / 2.0f);
+			return c;
+		}
 	}
 
 	Vector3? Separate() {
