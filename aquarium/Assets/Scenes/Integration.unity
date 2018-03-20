@@ -22372,16 +22372,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parameters:
     breed: 0
-    minSpeed: 2.01
+    minSpeed: 2.62
     maxSpeed: 5
-    desiredSeparation: 5
+    desiredSeparation: 3.5
     separationWeight: 3
     alignmentDistance: 20
     alignmentWeight: 2
     cohesionDistance: 80
     cohesionWeight: 1
     destination: {x: 0, y: 5, z: 0}
-    destinationWeight: 1
+    destinationWeight: 0.23
     useFrustumForBounds: 1
     minimumZ: -5
     maximumZ: 20
