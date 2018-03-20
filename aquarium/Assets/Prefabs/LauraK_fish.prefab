@@ -246,23 +246,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parameters:
     breed: 0
-    minSpeed: 1.99
-    maxSpeed: 4.27
-    rotationSpeed: 3
+    minSpeed: 1.22
+    maxSpeed: 4.7
     desiredSeparation: 5
     separationWeight: 3
     alignmentDistance: 20
     alignmentWeight: 2
     cohesionDistance: 80
     cohesionWeight: 1
-    minimumX: -15
-    maximumX: 15
-    minimumY: -10
-    maximumY: 10
+    destination: {x: 0, y: 7.19, z: 0}
+    destinationWeight: 1
+    useFrustumForBounds: 1
     minimumZ: -5
     maximumZ: 20
-    destination: {x: 0, y: 7.19, z: 0}
-    destinationWeight: 1.55
   angularVelocityController:
     pFactor: 2
     iFactor: 0.00025

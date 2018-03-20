@@ -26,28 +26,52 @@ public class VectorPid
 			+ integral * iFactor
 			+ deriv * dFactor;
 	}
+
+	public void OnValidate () {
+		pFactor = Mathf.Max (0, pFactor);
+		iFactor = Mathf.Max (0, iFactor);
+		dFactor = Mathf.Max (0, dFactor);
+	}
 }
 
 [System.Serializable]
 public class FlockingParameters {
 	public int 	 breed             = 0;
+	[Header("Physical parameters")]
 	public float minSpeed          = 0.1f;
 	public float maxSpeed          = 5.0f;
-	public float rotationSpeed     = 3.0f;
+
+	[Header("Behaviour parameters")]
 	public float desiredSeparation = 1.0f;
 	public float separationWeight  = 1.0f;
 	public float alignmentDistance = 6.0f;
 	public float alignmentWeight   = 1.0f;
 	public float cohesionDistance  = 6.0f;
 	public float cohesionWeight    = 1.0f;
-	public float minimumX          = -50.0f;
-	public float maximumX          = 50.0f;
-	public float minimumY          = 0.0f;
-	public float maximumY          = 5.0f;
-	public float minimumZ          = 0.0f;
-	public float maximumZ          = 20.0f;
-	public Vector3 destination;
-	public float destinationWeight;
+	public Vector3 destination     = new Vector3(0f, 0f, 0f);
+	public float destinationWeight = 1.0f;
+
+	[Header("Boundaries")]
+	public bool useFrustumForBounds = true;
+	public float minimumZ           = 0.0f;
+	public float maximumZ           = 20.0f;
+
+	public void OnValidate() {
+		minSpeed          = Mathf.Min (minSpeed, maxSpeed);
+		maxSpeed          = Mathf.Max (minSpeed, maxSpeed);
+		minSpeed          = Mathf.Max (0, minSpeed);
+		maxSpeed          = Mathf.Max (0, maxSpeed); // Order matters with speed clamping
+		desiredSeparation = Mathf.Max (0, desiredSeparation);
+		separationWeight  = Mathf.Max (0, separationWeight);
+		alignmentDistance = Mathf.Max (0, alignmentDistance);
+		alignmentWeight   = Mathf.Max (0, alignmentWeight);
+		cohesionDistance  = Mathf.Max (0, cohesionDistance);
+		cohesionWeight    = Mathf.Max (0, cohesionWeight);
+		destinationWeight = Mathf.Max (0, destinationWeight);
+
+		minimumZ = Mathf.Min (minimumZ, maximumZ);
+		maximumZ = Mathf.Max (minimumZ, maximumZ);
+	}
 };
 
 public class FlockingFish : MonoBehaviour {
@@ -57,11 +81,18 @@ public class FlockingFish : MonoBehaviour {
 
 
 	public VectorPid angularVelocityController = new VectorPid(0f, 0f, 0f);
-	public VectorPid headingController = new VectorPid(0f, 0f, 0f); // TODO sb private readonly
-	public VectorPid upController = new VectorPid(0f, 0f, 0f); // TODO balance
+	public VectorPid headingController         = new VectorPid(0f, 0f, 0f);
+	public VectorPid upController              = new VectorPid(0f, 0f, 0f);
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
+	}
+
+	void OnValidate() {
+		parameters.OnValidate ();
+		angularVelocityController.OnValidate ();
+		headingController.OnValidate ();
+		upController.OnValidate ();
 	}
 
 	public static void DrawPoint (Vector3 pos, Color col, float scale)
@@ -108,8 +139,7 @@ public class FlockingFish : MonoBehaviour {
 		Vector3? alignment = Align ();
 		Vector3? destination = Destination ();
 
-		//Vector3? bounds = CheckBoundaries ();
-		Vector3? bounds = CheckViewFrustum ();
+		Vector3? bounds = parameters.useFrustumForBounds ? CheckViewFrustum () : CheckBoundaries ();
 		if (bounds == null) {
 			if (cohesion != null) {
 				Vector3 cohesionHeading = cohesion.Value - transform.position;
@@ -222,18 +252,8 @@ public class FlockingFish : MonoBehaviour {
 	}
 
 	Vector3? CheckBoundaries() {
-		if (transform.localPosition.x <  parameters.minimumX ||
-			transform.localPosition.x >= parameters.maximumX ||
-			transform.localPosition.y <  parameters.minimumY ||
-			transform.localPosition.y >= parameters.maximumY ||
-			transform.localPosition.z <  parameters.minimumZ ||
-			transform.localPosition.z >= parameters.maximumZ) {
-			Vector3 c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,
-				                     (parameters.minimumY + parameters.maximumY) / 2.0f,
-				                     (parameters.minimumZ + parameters.maximumZ) / 2.0f);
-			return c;
-		}
-		else return null;
+		// TODO implement
+		throw new System.NotImplementedException ();
 	}
 
 	Vector3? CheckViewFrustum() {
@@ -246,13 +266,9 @@ public class FlockingFish : MonoBehaviour {
 			bool keepCurrentY = true;
 			Vector3 c;
 			if (keepCurrentY) {
-				c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,
-					transform.position.y,
-					(parameters.minimumZ + parameters.maximumZ) / 2.0f);
+				c = new Vector3 (0.0f, transform.position.y, (parameters.minimumZ + parameters.maximumZ) / 2.0f);
 			} else {
-				c = new Vector3 ((parameters.minimumX + parameters.maximumX) / 2.0f,
-					           (parameters.minimumY + parameters.maximumY) / 2.0f,
-					           (parameters.minimumZ + parameters.maximumZ) / 2.0f);
+				c = new Vector3 (0.0f, 0.0f, (parameters.minimumZ + parameters.maximumZ) / 2.0f);
 			}
 			return c;
 		}
