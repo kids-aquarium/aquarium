@@ -8,7 +8,7 @@ public class FishFlocker : MonoBehaviour {
 	public bool passParametersToFlock;
 
 	void Start () {
-		generateSeekPosition();
+		//generateSeekPosition();
 	}
 
 	void Update () {
