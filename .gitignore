@@ -45,3 +45,6 @@ tags
 
 # macOS files
 .DS_Store
+
+# Commercial asset packs
+aquarium/Assets/Stylized Nature Pack/
