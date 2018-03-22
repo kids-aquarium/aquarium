@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114151477276851650}
   - component: {fileID: 114223235334145550}
   - component: {fileID: 54714993213726116}
+  - component: {fileID: 136441097258259188}
   m_Layer: 0
   m_Name: LauraK_fish
   m_TagString: Untagged
@@ -180,15 +181,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1295541271461026}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5220695, y: 0.35790873, z: -1.5521364}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -17, y: -7.8997974, z: 13.106295}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children:
   - {fileID: 4100974155229900}
   - {fileID: 4537881432171936}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!54 &54714993213726116
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -245,21 +246,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parameters:
     breed: 0
-    minSpeed: 0.1
-    maxSpeed: 10
-    rotationSpeed: 3
-    desiredSeparation: 1
-    separationWeight: 1
-    alignmentDistance: 6
-    alignmentWeight: 1
-    cohesionDistance: 6
+    minSpeed: 1.22
+    maxSpeed: 4.7
+    desiredSeparation: 5
+    separationWeight: 3
+    alignmentDistance: 20
+    alignmentWeight: 2
+    cohesionDistance: 80
     cohesionWeight: 1
-    minimumX: -50
-    maximumX: 50
-    minimumY: 0
-    maximumY: 5
-    minimumZ: 0
+    destination: {x: 0, y: 7.19, z: 0}
+    destinationWeight: 1
+    useFrustumForBounds: 1
+    minimumZ: -5
     maximumZ: 20
+  angularVelocityController:
+    pFactor: 2
+    iFactor: 0.00025
+    dFactor: 0.05
+  headingController:
+    pFactor: 5
+    iFactor: 0.005
+    dFactor: 0.5
+  upController:
+    pFactor: 5
+    iFactor: 0.0025
+    dFactor: 1
+--- !u!136 &136441097258259188
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1295541271461026}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.005
+  m_Height: 0.02
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!137 &137423756972365048
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

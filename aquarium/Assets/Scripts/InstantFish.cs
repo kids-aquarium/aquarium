@@ -5,6 +5,7 @@ using UnityEngine;
 public class InstantFish : MonoBehaviour {
 
 	public GameObject prefab;
+	public float instantiationRadius = 10.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -33,7 +34,10 @@ public class InstantFish : MonoBehaviour {
 	}
 
 	public void InstantFishWithTexture(string _textureName){
-		GameObject newFish = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
+		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
+		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Random.insideUnitSphere);
+		GameObject newFish = Instantiate(prefab, transform.position + positionOffset, transform.rotation * rotationOffset);
 		newFish.GetComponent<setMaterial>().LoadTexture(_textureName);
 		newFish.transform.parent = this.transform;
 	}
