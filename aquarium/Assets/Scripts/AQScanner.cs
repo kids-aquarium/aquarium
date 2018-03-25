@@ -33,6 +33,7 @@ enum SCANNER_MODE { SIMULATION, ACTIVE };
 [System.Serializable]
 public class AQScannerEvent : UnityEvent<string> {}
 
+public class AQTexture2D
 {
 
     // private member property area /////////////////////////////////
