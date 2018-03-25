@@ -21,6 +21,7 @@
 
 
 using System;
+using System.Collections;
 using System.Reflection;
 using System.Threading;
 using UnityEngine;
@@ -29,9 +30,122 @@ using ZXing;
 
 enum SCANNER_MODE { SIMULATION, ACTIVE };
 
-
 [System.Serializable]
 public class AQScannerEvent : UnityEvent<string> {}
+
+{
+
+    // private member property area /////////////////////////////////
+
+    private Color[] pixels;
+    private int myWidth;
+    private int myHeight;
+    private int length;
+
+    // public member property area //////////////////////////////////
+
+    // private member method area ///////////////////////////////////
+
+    // public member method area ////////////////////////////////////
+
+
+    public AQTexture2D(int width, int height)
+    {
+        myWidth = width;
+        myHeight = height;
+
+        length = (myWidth * myHeight);
+
+        pixels = new Color[myWidth * myHeight];
+    }
+
+    public int width
+    {
+        get
+        {
+            return myWidth;
+        }
+    }
+
+    public int height
+    {
+        get
+        {
+            return myHeight;
+        }
+    }
+
+    public void SetPixels(Color[] recvPixels)
+    {
+        Array.Copy(recvPixels,pixels,length);
+    }
+
+    public void reverse()
+    {
+        System.Array.Reverse(pixels);
+    }
+
+    public void SetPixel(int x , int y, Color recvColor)
+    {
+        int index;
+
+        index = (y * width) + x;
+
+        pixels[index] = recvColor;
+    }
+  
+    public Color[] GetPixels(int width, int height)
+    {
+        Color[] retColor;
+
+        retColor = null;
+
+
+        return retColor;
+    }
+
+    public Color[] GetPixels()
+    {
+        return pixels;
+    }
+
+    public Color32[] GetPixels32()
+    {
+        int sum;
+        Color32[] retColor;
+
+        sum = (width * height);
+
+        retColor = new Color32[sum];
+
+        for (int i = 0; i < sum;i++)
+        {
+            retColor[i] = pixels[i];
+        }
+
+        return retColor;
+    }
+
+    public Color GetPixel(int x, int y)
+    {
+        int index;
+        Color retColor;
+
+        index = (y * width) + x;
+
+        retColor = pixels[index];
+
+        return retColor;
+    }
+
+    // public event handling area //////////////////////////////////
+
+
+
+
+
+
+}
 
 
 public class AQScanner : MonoBehaviour
@@ -42,19 +156,30 @@ public class AQScanner : MonoBehaviour
 
     private SCANNER_MODE scannerMode;
     private bool isScannerReady;
+    private bool isFishFileReady;
+    private bool isScannerBusy;
     private int fishID;
+    private int fishMaskCount;
+    private int lastTime;
     private Vector2 cameraSize;
+    private Vector2 codeSize;
     private String maskImageName;
     private String cameraName;
     private string fishName;
     private string fishNameHeader;
     private WebCamTexture webCam;
-    private Texture2D finalImage;
     private Texture2D orgImage;
+    private Texture2D testQRCodeImage;
+    private AQTexture2D fishIDImage;
+    private AQTexture2D interimImage;
+    private AQTexture2D finalImage;
+    private AQTexture2D[] fishMasks;
     private Texture2D maskImage;
-    private Texture2D fishIDTexture;
     private BarcodeReader fishCodeReader;
-    private Thread threadScanner;
+    private Thread scannerThread;
+
+
+    private Color32[] testColor;
 
 
 
@@ -69,10 +194,21 @@ public class AQScanner : MonoBehaviour
 
     private void initDefaultData()
     {
+        lastTime = 0;
+
         fishID = 0; // for testing
 
-        finalImage = null;
+        fishMaskCount = 6;
+
+        codeSize.x = 300;
+        codeSize.y = 250;
+
+        isFishFileReady = false;
+
+        interimImage = null;
         webCam = null;
+        scannerThread = null;
+        isScannerBusy = false;
         isScannerReady = true;
 
         scannerMode = SCANNER_MODE.SIMULATION;
@@ -84,32 +220,68 @@ public class AQScanner : MonoBehaviour
 
         cameraSize.Set(1920, 1080);
 
+        fishMasks = new AQTexture2D[fishMaskCount];
+
+        scannerThread = new Thread(procImage);
+
         fishCodeReader = new BarcodeReader();
 
         orgImage = new Texture2D((int)cameraSize.x, (int)cameraSize.y, TextureFormat.RGBA32, false);
-        maskImage = new Texture2D((int)cameraSize.x, (int)cameraSize.y, TextureFormat.RGBA32, false);
+
+        fishIDImage   = new AQTexture2D((int)codeSize.x, (int)codeSize.y);
+        interimImage  = new AQTexture2D((int)cameraSize.x, (int)cameraSize.y);
+
+        loadMaskImage();
 
         initCamera();
     }
 
+    private void loadMaskImage()
+    {
+        String tempImageName;
+        Texture2D tempMaskImage;
+
+        for (int i = 0; i < fishMaskCount; i++)
+        {
+            tempImageName = "fishMask" + String.Format("{0:00}", i);
+
+            tempMaskImage = new Texture2D((int)cameraSize.x, (int)cameraSize.y, TextureFormat.RGBA32, false);
+
+            tempMaskImage = Resources.Load(tempImageName) as Texture2D;
+
+            fishMasks[i] = new AQTexture2D(tempMaskImage.width, tempMaskImage.height);
+
+            fishMasks[i].SetPixels(tempMaskImage.GetPixels(0, 0, tempMaskImage.width, tempMaskImage.height));
+        }
+    }
+
     private void initCamera()
     {
+        int camIndex;
         WebCamDevice[] devices;
 
+        camIndex = -1;
         devices = WebCamTexture.devices;
 
         for (int i = 0; i < devices.Length; i++)
         {
             Debug.Log(devices[i].name);
+
+            if (devices[i].name.Contains("C920") == true)
+            {
+                camIndex = i;
+
+                break;
+            }
         }
 
-        if (devices.Length > 1)
+        if (camIndex >= 0)
         {
-            cameraName = devices[1].name;
+            cameraName = devices[camIndex].name;
         
             webCam = new WebCamTexture(cameraName , (int)cameraSize.x, (int)cameraSize.y, 1);
 
-            webCam.deviceName = devices[1].name; // because webcam is always 0
+            webCam.deviceName = devices[camIndex].name; // because webcam is always 0
 
             webCam.Play();
 
@@ -128,11 +300,11 @@ public class AQScanner : MonoBehaviour
         }
     }
 
+    /*
     private void SharpenCameraImage()
     {
         Color[] fishIDPixels;
         Color colorGray, finalColor, tempColor;
-        Vector2 codeSize;
         Texture2D tempTexture;
         int matSize;
         int scale;
@@ -164,17 +336,13 @@ public class AQScanner : MonoBehaviour
 
         scale = (matSize / 2);
 
-        codeSize.x = 300;
-        codeSize.y = 250;
-
         colorGray     = new Color32();
         finalColor    = new Color32();
         tempTexture   = new Texture2D((int)codeSize.x, (int)codeSize.y);
         fishIDTexture = new Texture2D((int)codeSize.x, (int)codeSize.y);
 
-        fishIDPixels = orgImage.GetPixels(300, 100, (int)codeSize.x, (int)codeSize.y);
 
-        tempTexture.SetPixels(fishIDPixels);
+       // tempTexture.SetPixels(fishIDPixels);
 
         tempTexture.Apply();
 
@@ -224,14 +392,11 @@ public class AQScanner : MonoBehaviour
         }
 
         fishIDTexture.Apply();
-    }
+    }*/
 
     private void SharpenCameraImage2()
     {
-        Color[] fishIDPixels;
         Color colorGray, finalColor, tempColor;
-        Vector2 codeSize;
-        Texture2D tempTexture;
         int matSize;
         int scale;
         float[,] filter;
@@ -255,26 +420,15 @@ public class AQScanner : MonoBehaviour
 
         scale = (matSize / 2);
 
-        codeSize.x = 300;
-        codeSize.y = 250;
-
-        tempColor = new Color32();
-        colorGray = new Color32();
-        finalColor = new Color32();
-        tempTexture = new Texture2D((int)codeSize.x, (int)codeSize.y);
-        fishIDTexture = new Texture2D((int)codeSize.x, (int)codeSize.y);
-
-        fishIDPixels = orgImage.GetPixels(300, 100, (int)codeSize.x, (int)codeSize.y);
-
-        tempTexture.SetPixels(fishIDPixels);
-
-        tempTexture.Apply();
-
-        for (int y = 0; y < fishIDTexture.height; y++)
+        tempColor = new Color();
+        colorGray = new Color();
+        finalColor = new Color();
+         
+        for (int y = 0; y < fishIDImage.height; y++)
         {
-            for (int x = 0; x < fishIDTexture.width; x++)
+            for (int x = 0; x < fishIDImage.width; x++)
             {
-                tempColor = tempTexture.GetPixel(x, y);
+                tempColor = fishIDImage.GetPixel(x, y);
 
                 tempGray = (tempColor.r + tempColor.g + tempColor.b) / 3;
                 colorGray.r = tempGray;
@@ -282,11 +436,9 @@ public class AQScanner : MonoBehaviour
                 colorGray.b = tempGray;
                 colorGray.a = 1.0f;
 
-                tempTexture.SetPixel(x, y, colorGray);
+                fishIDImage.SetPixel(x, y, colorGray);
             }
         }
-
-        tempTexture.Apply();
 
         for (int x = scale; x < codeSize.x - scale; x++)
         {
@@ -298,7 +450,7 @@ public class AQScanner : MonoBehaviour
                 {
                     for (int filterX = 0; filterX < matSize; filterX++)
                     {
-                        tempColor = tempTexture.GetPixel(x + filterX - scale, y + filterY - scale);
+                        tempColor = fishIDImage.GetPixel(x + filterX - scale, y + filterY - scale);
 
                         finalColor.r += filter[filterX, filterY] * tempColor.r;
                         finalColor.g += filter[filterX, filterY] * tempColor.g;
@@ -312,32 +464,32 @@ public class AQScanner : MonoBehaviour
 
                 finalColor.a = 1.0f;
 
-                fishIDTexture.SetPixel(x, y, finalColor);
+                fishIDImage.SetPixel(x, y, finalColor);
             }
         }
 
-        fishIDTexture.Apply();
+        Debug.Log("Done : " + MethodBase.GetCurrentMethod().Name);
     }
-
 
     private void ObtainCameraImage()
     {
-        webCam.Play();
-
         orgImage.SetPixels32(webCam.GetPixels32());
         orgImage.Apply();
-   
-        webCam.Pause(); // for better performance
+
+        interimImage.SetPixels(orgImage.GetPixels(0, 0, orgImage.width, orgImage.height));
+
+        fishIDImage.SetPixels(orgImage.GetPixels(300, 100, (int)codeSize.x, (int)codeSize.y));
 
         Debug.Log("done : " + MethodBase.GetCurrentMethod().Name + "camera resolution : " + webCam.width + " , " + webCam.height);
     }
 
     private void OptainTestImage()
     {
-        orgImage = Resources.Load("FishForTesting02") as Texture2D;
-        orgImage = Resources.Load("testHD_ORG") as Texture2D;
+        orgImage = Resources.Load("defaultFishImage") as Texture2D;
 
-        finalImage = new Texture2D(orgImage.width, orgImage.height, TextureFormat.RGBA32, false);
+        interimImage.SetPixels(orgImage.GetPixels(0, 0, orgImage.width, orgImage.height));
+
+        fishIDImage.SetPixels(orgImage.GetPixels(300, 100, (int)codeSize.x, (int)codeSize.y));
 
         Debug.Log("done : " + MethodBase.GetCurrentMethod().Name);
     }
@@ -346,73 +498,98 @@ public class AQScanner : MonoBehaviour
     {
         ZXing.Result result;
 
-        result = fishCodeReader.Decode(fishIDTexture.GetPixels32(), fishIDTexture.width, fishIDTexture.height);
+        result = fishCodeReader.Decode(fishIDImage.GetPixels32(), fishIDImage.width, fishIDImage.height);
 
         if (result != null)
         {
             maskImageName = result.Text;
 
             Debug.Log("ID detected " + maskImageName);
+
+            fishID = 0; // just for test
+
+            // here I need to find the index of fishID
         }
         else
         {
-            maskImageName = "MaskForTesting";
+            fishID = 0;
 
             Debug.Log(("Can't detect ID, this function will return default file name!"));
         }
-
-        maskImageName = "MaskForTesting"; // for testing
-
-        maskImage = Resources.Load(maskImageName) as Texture2D;
     }
 
     private void ProcessFinalImage()
     {
         Color colorOrgImage;
         int width, height;
-        byte[] bytes;
+        int minX, minY;
+        int maxX, maxY;
+        int finalWidth, finalHeight;
 
-        width  = orgImage.width;
-        height = orgImage.height;
+        minX = 1000;
+        minY = 1000;
 
-        finalImage = null;
+        maxX = -1000;
+        maxY = -1000;
 
-        finalImage = new Texture2D(width , height, TextureFormat.RGBA32, false);
+        width = interimImage.width;
+        height = interimImage.height;
+
+        interimImage.reverse();
 
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                colorOrgImage   = orgImage.GetPixel(x, y);
-                colorOrgImage.a = maskImage.GetPixel(x, y).r;
+                colorOrgImage = interimImage.GetPixel(x, y);
+                colorOrgImage.a = fishMasks[fishID].GetPixel(x, y).r;
 
-                finalImage.SetPixel(x, y, colorOrgImage);
+                interimImage.SetPixel(x, y, colorOrgImage);
+
+                if (colorOrgImage.a.Equals(0.0f) == false)
+                {
+                    if (x < minX)
+                    {
+                        minX = x;
+                    }
+
+                    if (y < minY)
+                    {
+                        minY = y;
+                    }
+
+                    if (x > maxX)
+                    {
+                        maxX = x;
+                    }
+
+                    if (y > maxY)
+                    {
+                        maxY = y;
+                    }
+                }
             }
         }
 
-        finalImage.Apply();
+        finalImage = null;
 
-        if (fishReadyEvent != null)
+        finalWidth  = (maxX - minX);
+        finalHeight = (maxY - minY);
+
+        finalImage = new AQTexture2D(finalWidth,finalHeight);
+
+        for (int y = minY; y < maxY; y++)
         {
-            bytes = finalImage.EncodeToPNG();
-
-            fishName = fishNameHeader + String.Format("{0:00000}", fishID);
-
-            System.IO.File.WriteAllBytes(Application.dataPath + "/resources/"+ fishName + ".png", bytes);
-
-            fishReadyEvent.Invoke(fishName);
-
-            fishID++;
+            for (int x = minX; x < maxX; x++)
+            {
+                finalImage.SetPixel((x-minX), (y-minY), interimImage.GetPixel(x, y));
+            }
         }
 
         Debug.Log("The final image is ready!");
         Debug.Log("Done :" + MethodBase.GetCurrentMethod().Name);
-    }
 
-
-    private Texture2D GetTexture()
-    {
-        return finalImage;
+        isFishFileReady = true;
     }
 
     private Texture GetCamTexture()
@@ -420,11 +597,24 @@ public class AQScanner : MonoBehaviour
         return webCam;
     }
 
-    private bool GoFishing()
+    private void procImage()
     {
-        bool success;
+        SharpenCameraImage2();
 
-        success = true;
+        DetectQRCode();
+
+        ProcessFinalImage();
+
+        isScannerBusy = false;
+    }
+
+    private void GoFishing()
+    {
+        isScannerBusy = true;
+
+        lastTime = Environment.TickCount;
+
+        Debug.Log("------ Scanning Started ------------- ");
 
         try
         {
@@ -437,33 +627,66 @@ public class AQScanner : MonoBehaviour
                 ObtainCameraImage();
             }
 
-            SharpenCameraImage2();
+            scannerThread = null;
 
-            DetectQRCode();
+            scannerThread = new Thread(procImage);
 
-            ProcessFinalImage();
+            scannerThread.Start();
         }
         catch (Exception e)
         {
-            success = false;
-
             Debug.LogException(e, this);
         }
-
-        return success;
     }
 
+    private void checkSaveFinalImage()
+    {
+        int curTime;
+        Byte[] bytes;
+   
+        isFishFileReady = false;
+
+        testQRCodeImage = new Texture2D(finalImage.width, finalImage.height, TextureFormat.RGBA32, false);
+
+        testQRCodeImage.SetPixels(finalImage.GetPixels());
+
+        bytes = testQRCodeImage.EncodeToPNG();
+
+        fishName = fishNameHeader + String.Format("{0:00000}", 100);
+
+        System.IO.File.WriteAllBytes(Application.dataPath + "/resources/" + fishName + ".png", bytes);
+
+        curTime = Environment.TickCount;
+
+        Debug.Log("------ Scanning Done -------------");
+
+        fishReadyEvent.Invoke(fishName);
+    }
+
+	private void OnGUI()
+    {
+        if (testQRCodeImage != null)
+        {
+            ;//GUI.DrawTexture(new Rect(0, 0, testQRCodeImage.width, testQRCodeImage.height) , testQRCodeImage, ScaleMode.ScaleAndCrop, true);
+        }
+        else
+        {
+            ;//GUI.DrawTexture(new Rect(0, 0, 1280, 960), webCam, ScaleMode.ScaleAndCrop, true);
+        }
+	}
 
 
 
-    // public event handling area //////////////////////////////////
+
+	// public event handling area //////////////////////////////////
 
 
 
 
-    // public member method area ////////////////////////////////////
+	// public member method area ////////////////////////////////////
 
-    void Start()
+
+	void Start()
     {
         try
         {
@@ -484,27 +707,23 @@ public class AQScanner : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        
+        if (Input.GetMouseButtonUp(0) == true)
         {
-            GoFishing();
+            if (isScannerBusy == false)
+            {
+                GoFishing();
+            }
+            else
+            {
+                Debug.Log("scanner is busy, try later!" + MethodBase.GetCurrentMethod().Name);
+            }
+        }
+  
+        if (isFishFileReady == true)
+        {
+            checkSaveFinalImage();
         }
 
-
-        /*
-        if (webCam != null)
-        {
-            GUI.DrawTexture(new Rect(0, 0, 1920, 1024), webCam, ScaleMode.ScaleAndCrop, true);
-        }*/
-
-        /*
-        if (finalImage != null)
-        {
-            GUI.DrawTexture(new Rect(0, 0, 1280, 960), finalImage, ScaleMode.ScaleAndCrop, true);
-        }
-        else
-        {
-            GUI.DrawTexture(new Rect(0, 0, 1280, 960), webCam, ScaleMode.ScaleAndCrop, true);
-        }*/
     }
-
 }
