@@ -34,4 +34,12 @@ public class setMaterial : MonoBehaviour {
 			rend.material.SetTexture("_MainTex", t);
 		}
 	}
+
+	public void LoadTexture2D(Texture2D _tex){
+		fishMaterial = GetComponentsInChildren<Renderer>();
+
+		foreach(Renderer ren in fishMaterial){
+			ren.material.mainTexture = _tex;
+		}
+	}
 }
