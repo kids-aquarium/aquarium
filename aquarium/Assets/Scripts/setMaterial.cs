@@ -42,4 +42,14 @@ public class setMaterial : MonoBehaviour {
 			ren.material.mainTexture = _tex;
 		}
 	}
+
+	public void LoadTextureWWW(WWW file){
+		fishMaterial = GetComponentsInChildren<Renderer>();
+
+		Texture t = file.texture;
+
+		foreach(Renderer ren in fishMaterial){
+			ren.material.SetTexture("file", t);
+		}
+	}
 }

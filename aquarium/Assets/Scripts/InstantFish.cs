@@ -42,12 +42,21 @@ public class InstantFish : MonoBehaviour {
 		newFish.transform.parent = this.transform;
 	}
 
-		public void InstantFishWithTexture2D(Texture2D tex){
+	public void InstantFishWithTexture2D(Texture2D tex){
 		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
 		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
 		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Random.insideUnitSphere);
 		GameObject newFish = Instantiate(prefab, transform.position + positionOffset, transform.rotation * rotationOffset);
 		newFish.GetComponent<setMaterial>().LoadTexture2D(tex);
+		newFish.transform.parent = this.transform;
+	}
+
+	public void InstantFishFromFile(WWW file){
+		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
+		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
+		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Random.insideUnitSphere);
+		GameObject newFish = Instantiate(prefab, transform.position + positionOffset, transform.rotation * rotationOffset);
+		newFish.GetComponent<setMaterial>().LoadTextureWWW(file);
 		newFish.transform.parent = this.transform;
 	}
 }
