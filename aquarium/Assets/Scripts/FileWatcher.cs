@@ -24,23 +24,26 @@ public class FileWatcher : MonoBehaviour
         Environment.SetEnvironmentVariable("MONO_MANAGED_WATCHER", "enabled");
         #endif
 
-    }
-
-    void Update (){
-        watcher = new FileSystemWatcher ();
+        watcher = new FileSystemWatcher();
         watcher.Path = Application.streamingAssetsPath;
         watcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.DirectoryName
                 | NotifyFilters.FileName | NotifyFilters.LastAccess | NotifyFilters.LastWrite
                 | NotifyFilters.Size;
         watcher.Filter = fileToWatch;
-        watcher.Renamed += new RenamedEventHandler (OnRenamed);
-        watcher.Changed += new FileSystemEventHandler (OnChanged);
-        watcher.Created += new FileSystemEventHandler (OnChanged);
-        watcher.Deleted += new FileSystemEventHandler (OnChanged);
-        watcher.Error += new ErrorEventHandler(OnError);
-       
+        //watcher.Renamed += new RenamedEventHandler(OnRenamed);
+        //watcher.Changed += new FileSystemEventHandler(OnChanged);
+        watcher.Created += new FileSystemEventHandler(OnChanged);
+        //watcher.Deleted += new FileSystemEventHandler(OnChanged);
+        //watcher.Error += new ErrorEventHandler(OnError);
+
         watcher.IncludeSubdirectories = true;
         watcher.EnableRaisingEvents = true;
+    }
+
+    void Update ()
+    {
+       
+        
     }
    
     private void OnChanged (object source, FileSystemEventArgs e)
@@ -48,7 +51,8 @@ public class FileWatcher : MonoBehaviour
         WatcherChangeTypes wct = e.ChangeType;
         Debug.Log (e.FullPath + ": " + wct.ToString ());
 
-        if(wct.ToString() == "Created"){
+        if(wct.ToString() == "Created" && e.FullPath.Contains("meta") == false) // John ,to avoid reading meta file
+        {
             NewFishFromFileEvent.Invoke(e.FullPath);
         }
     }

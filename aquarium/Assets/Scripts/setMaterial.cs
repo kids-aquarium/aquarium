@@ -43,15 +43,20 @@ public class setMaterial : MonoBehaviour {
 		}
 	}
 
-	public void LoadTextureF(string filePath){
+    public IEnumerator LoadTextureF(string filePath){ // John
 		fishMaterial = GetComponentsInChildren<Renderer>();
 
 		WWW file = new WWW(filePath);
 
+        yield return file;
+
 		Texture t = file.texture;
 
-		foreach(Renderer ren in fishMaterial){
+		foreach(Renderer ren in fishMaterial)
+        {
 			ren.material.SetTexture("file", t);
 		}
+
+        Debug.Log("LoadTextureF Done : " + filePath);
 	}
 }
