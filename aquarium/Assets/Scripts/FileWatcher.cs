@@ -12,9 +12,9 @@ public class NewFishEvent : UnityEvent<string>
 
 public class FileWatcher : MonoBehaviour
 {
-    public string fileToWatch = "*.*";
+    public string fileToWatch = "*.png";
     private FileSystemWatcher watcher;
-    public NewFishEvent NewFishFromFileEvent = new NewFishEvent();
+    public NewFishEvent NewFishFromFileEvent;
 
     // public GameObject FishManager;
        

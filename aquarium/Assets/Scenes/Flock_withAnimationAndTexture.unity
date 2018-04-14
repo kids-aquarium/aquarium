@@ -266,7 +266,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1517410376}
-        m_MethodName: InstantFishWithTexture
+        m_MethodName: InstantFishFromFile
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
