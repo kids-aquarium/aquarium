@@ -11,6 +11,20 @@ public class StreamingFolder : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		//Load all files in the folder into the CachedFishes to avoid system temp files.
+		//IMPORTANT: This would also prevent pre-existing fish files from instantiating, only files added to the folder
+		//AFTER the build is running would work.
+
+		var info = new DirectoryInfo(Application.streamingAssetsPath);
+		FileInfo[] fileInfo = info.GetFiles();
+
+		if(fileInfo != null){
+			foreach(FileInfo file in fileInfo){
+				string name = file.Name;
+				CachedFishes.Add(name);
+		}
+		}
 		
 	}
 	
@@ -38,8 +52,24 @@ public class StreamingFolder : MonoBehaviour {
 
 			foreach (FileInfo file in fileInfo) {
 				string filename = file.Name;
-				//Debug.Log(filename);
-    
+				
+				//Go through CachedFishes to check for duplicates...
+				foreach(string cached in CachedFishes){
+					if(filename == cached){
+						Debug.Log("Found Duplicate");
+						yield return null;
+				} else {
+					Debug.Log("New Fish!");
+					WWW FishFile = new WWW("Application.streamingAssetsPath + filename");
+
+					yield return FishFile;
+					
+					FishManager.GetComponent<InstantFish>().InstantFishFromFile(FishFile);
+
+					CachedFishes.Add(filename);
+				}
+
+			}
 		}
 		}
 
