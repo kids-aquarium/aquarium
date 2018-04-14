@@ -51,12 +51,12 @@ public class InstantFish : MonoBehaviour {
 		newFish.transform.parent = this.transform;
 	}
 
-	public void InstantFishFromFile(WWW file){
+	public void InstantFishFromFile(string filepath){
 		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
 		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
 		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Random.insideUnitSphere);
 		GameObject newFish = Instantiate(prefab, transform.position + positionOffset, transform.rotation * rotationOffset);
-		newFish.GetComponent<setMaterial>().LoadTextureWWW(file);
+		newFish.GetComponent<setMaterial>().LoadTextureF(filepath);
 		newFish.transform.parent = this.transform;
 	}
 }

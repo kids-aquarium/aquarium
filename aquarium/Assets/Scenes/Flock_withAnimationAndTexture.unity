@@ -258,10 +258,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 1217156710}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc8f727a2fbd14b39a455101211b0c9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 409f847ce0078433ebdd314b820a874e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FishManager: {fileID: 1517410375}
+  fileToWatch: '*.*'
+  NewFishFromFileEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1517410376}
+        m_MethodName: InstantFishWithTexture
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+    m_TypeName: NewFishEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!4 &1217156712
 Transform:
   m_ObjectHideFlags: 0

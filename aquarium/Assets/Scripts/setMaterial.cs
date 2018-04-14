@@ -43,8 +43,10 @@ public class setMaterial : MonoBehaviour {
 		}
 	}
 
-	public void LoadTextureWWW(WWW file){
+	public void LoadTextureF(string filePath){
 		fishMaterial = GetComponentsInChildren<Renderer>();
+
+		WWW file = new WWW(filePath);
 
 		Texture t = file.texture;
 
