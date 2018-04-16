@@ -40,6 +40,9 @@ sysinfo.txt
 *.apk
 *.unitypackage
 *.app
+*.exe
+*.dll
+*_Data/
 
 # vim tags
 tags
