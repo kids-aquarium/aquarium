@@ -39,6 +39,10 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+*.app
+*.exe
+*.dll
+*_Data/
 
 # vim tags
 tags
@@ -51,3 +55,4 @@ aquarium/Assets/Stylized Nature Pack/
 *Stylized Nature Pack/
 aquarium/Assets/Stylized Nature Pack.zip
 aquarium/Assets/Stylized Nature Pack.zip.meta
+
