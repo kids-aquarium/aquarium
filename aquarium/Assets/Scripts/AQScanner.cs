@@ -6,6 +6,18 @@
 // Then find a QR code which is ID of a fish.
 // Finally, it'll pass only texture of fish
 //
+// 5 May 2018, scanner_enhancement_001.
+//
+// 1. I added 'flip' function of fish image from camera because we don't know the angle of camera would be installed at hospital.
+//    so, just call this function would flip fish image 180degree if x axis.
+//    you can call this function 
+//
+//
+// 2. 
+
+
+
+
 //
 // private member property area /////////////////////////////////
 
@@ -32,6 +44,11 @@ enum SCANNER_MODE { SIMULATION, ACTIVE };
 
 [System.Serializable]
 public class AQScannerEvent : UnityEvent<Texture2D> {}
+
+
+
+// This is custom made Texture2D class, the original plan was to use unity Texture2D
+// However, I can't use this class in Thread. So, I just made own Testure2D class which is equevalant to Texture2D
 
 public class AQTexture2D
 {
@@ -84,6 +101,32 @@ public class AQTexture2D
     public void reverse()
     {
         System.Array.Reverse(pixels);
+    }
+
+
+    // [scanner_enhancement_001]. 5 May 2018. To just call function would flip fish image 180degree of x axis.
+    // if you see fish image flipped then just call function
+
+    public void flip()
+    {
+        int index1, index2;
+        Color tempColor;
+
+        for (int y = 0; y < myHeight / 2; y++)
+        {
+            for (int x = 0; x < myWidth; x++)
+            {
+                index1 = (y * width) + x;
+
+                tempColor = pixels[index1];
+
+                index2 = (((myHeight - 1) - y) * width) + x;
+
+                pixels[index1] = pixels[index2];
+                pixels[index2] = tempColor;
+
+            }
+        }
     }
 
     public void SetPixel(int x , int y, Color recvColor)
@@ -143,9 +186,6 @@ public class AQTexture2D
 
 
 
-
-
-
 }
 
 
@@ -180,11 +220,6 @@ public class AQScanner : MonoBehaviour
     private Thread scannerThread;
 
 
-    private Color32[] testColor;
-
-
-
-
     // public member property area //////////////////////////////////
 
 
@@ -197,12 +232,12 @@ public class AQScanner : MonoBehaviour
     {
         lastTime = 0;
 
-        fishID = 0; // for testing
+        fishID = 0; // if scanner module couldn't found QR code then just use fish 0 as default.
 
         fishMaskCount = 6;
 
-        codeSize.x = 300;
-        codeSize.y = 250;
+        codeSize.x = 300; // this is enough width to detect only QR code, if camera resolution is changed then you need to change this as well.
+        codeSize.y = 250; // this is enough height to detect only QR code, if camera resolution is changed then you need to change this as well.
 
         isFishFileReady = false;
 
@@ -219,7 +254,7 @@ public class AQScanner : MonoBehaviour
         fishName = "00000";
         fishNameHeader = "fish_";
 
-        cameraSize.Set(1920, 1080);
+        cameraSize.Set(1920, 1080); // we using full-HD camera, in testing result this resolution is enough.
 
         fishMasks = new AQTexture2D[fishMaskCount];
 
@@ -301,7 +336,8 @@ public class AQScanner : MonoBehaviour
         }
     }
 
-    /*
+    /*// just keep this now for testing
+     
     private void SharpenCameraImage()
     {
         Color[] fishIDPixels;
@@ -538,6 +574,10 @@ public class AQScanner : MonoBehaviour
 
         //interimImage.reverse();
 
+        interimImage.flip(); // [001] flip 180degree by John. 5 May 2018
+         
+        fishMasks[fishID].flip(); // [001] don't forget you need flip mask image as well. by John. 5 May 2018
+
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -673,7 +713,7 @@ public class AQScanner : MonoBehaviour
 
 	private void OnGUI()
     {
-        if (finalFishTexture != null)
+        if (finalFishTexture != null) // keep this code for future test.
         {
             //GUI.DrawTexture(new Rect(0, 0, finalFishTexture.width, finalFishTexture.height) , finalFishTexture, ScaleMode.ScaleAndCrop, true);
         }
