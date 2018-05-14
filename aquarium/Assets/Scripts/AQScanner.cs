@@ -10,7 +10,7 @@
 //
 // 1. I added 'flip' function of fish image from camera because we don't know the angle of camera would be installed at hospital.
 //    so, just call this function would flip fish image 180degree if x axis.
-//    you can call this function 
+//    you can call this function inside ProcessFinalImage, don't forget you also should flip mask iamge as well.
 //
 //
 // 2. 
@@ -41,6 +41,8 @@ using UnityEngine.Events;
 using ZXing;
 
 enum SCANNER_MODE { SIMULATION, ACTIVE };
+
+
 
 [System.Serializable]
 public class AQScannerEvent : UnityEvent<Texture2D> {}
@@ -138,12 +140,35 @@ public class AQTexture2D
         pixels[index] = recvColor;
     }
   
-    public Color[] GetPixels(int width, int height)
+
+    //[001] added this function to copy array by region, John
+
+    public Color[] GetPixels(int x , int y , int width, int height)
     {
+		int sum;
+		int count;
+		int index;
+		int yMax, xMax;
         Color[] retColor;
 
-        retColor = null;
+		count = 0;
 
+		yMax = (y + height);
+		xMax = (x + width);
+
+        sum = (width * height);
+        
+        retColor = new Color[sum];
+
+		for (int i = y; i < yMax;i++)
+		{
+			for (int j = x; j < xMax;j++)
+			{
+				index = (i * myWidth) + j;
+
+				retColor[count++] = pixels[index];
+			}
+		}
 
         return retColor;
     }
@@ -195,15 +220,17 @@ public class AQScanner : MonoBehaviour
 
     // private member property area /////////////////////////////////
 
+    private char FILE_SEP; // this is file name separator
     private SCANNER_MODE scannerMode;
     private bool isScannerReady;
     private bool isFishFileReady;
     private bool isScannerBusy;
+    private bool isDebugMode;
     private int fishID;
     private int fishMaskCount;
     private int lastTime;
-    private Vector2 cameraSize;
-    private Vector2 codeSize;
+    private Rect cameraSize;
+    private Rect []codeArea;
     private String maskImageName;
     private String cameraName;
     private string fishName;
@@ -211,6 +238,7 @@ public class AQScanner : MonoBehaviour
     private WebCamTexture webCam;
     private Texture2D orgImage;
     private Texture2D finalFishTexture;
+    private Texture2D fishIDTestTexture;
     private AQTexture2D fishIDImage;
     private AQTexture2D interimImage;
     private AQTexture2D finalImage;
@@ -228,6 +256,44 @@ public class AQScanner : MonoBehaviour
 
     // private member method area ///////////////////////////////////
 
+	private void setCodeAndCameraArea()
+	{
+		codeArea = new Rect[4];
+
+		for (int i = 0; i < 4; i++)
+        {
+            codeArea[i].width = 500; // this is enough width to detect only QR code, if camera resolution is changed then you need to change this as well.
+            codeArea[i].height = 400; // this is enough height to detect only QR code, if camera resolution is changed then you need to change this as well.
+        }
+
+		codeArea[0].x = 0; // First area to search QRCode
+        codeArea[0].y = 0; 
+
+		codeArea[1].x = (cameraSize.width - codeArea[0].width); // Second area to search QRCode
+        codeArea[1].y = 0; 
+        
+		codeArea[2].x = (cameraSize.width - codeArea[0].width); // Third area to search QRCode
+		codeArea[2].y = (cameraSize.height - codeArea[0].height); 
+
+		codeArea[3].x = 0; // Forth area to search QRCode
+		codeArea[3].y = (cameraSize.height - codeArea[0].height);    
+	}
+
+	private void createObjects()
+	{
+		fishMasks = new AQTexture2D[fishMaskCount];
+
+        scannerThread = new Thread(procImage);
+
+        fishCodeReader = new BarcodeReader();
+
+        orgImage = new Texture2D((int)cameraSize.width, (int)cameraSize.height, TextureFormat.RGBA32, false);
+        fishIDTestTexture = new Texture2D((int)codeArea[0].width, (int)codeArea[0].height, TextureFormat.RGBA32, false);
+
+        fishIDImage = new AQTexture2D((int)codeArea[0].width, (int)codeArea[0].height);
+        interimImage = new AQTexture2D((int)cameraSize.width, (int)cameraSize.height);
+	}
+
     private void initDefaultData()
     {
         lastTime = 0;
@@ -236,37 +302,30 @@ public class AQScanner : MonoBehaviour
 
         fishMaskCount = 6;
 
-        codeSize.x = 300; // this is enough width to detect only QR code, if camera resolution is changed then you need to change this as well.
-        codeSize.y = 250; // this is enough height to detect only QR code, if camera resolution is changed then you need to change this as well.
-
-        isFishFileReady = false;
+		isFishFileReady = false;
 
         interimImage = null;
         webCam = null;
         scannerThread = null;
         isScannerBusy = false;
         isScannerReady = true;
+		isDebugMode = false; // use this flag to turn on/off debug mode
 
         scannerMode = SCANNER_MODE.SIMULATION;
 
-        maskImageName = "MaskForTesting"; // for testing
+		FILE_SEP = '_';
+
+        maskImageName = "fishmask"; // for testing
 
         fishName = "00000";
-        fishNameHeader = "fish_";
+        fishNameHeader = "fish_scanned" + FILE_SEP;
 
-        cameraSize.Set(1920, 1080); // we using full-HD camera, in testing result this resolution is enough.
+		cameraSize.Set(0, 0, 1920, 1080);
 
-        fishMasks = new AQTexture2D[fishMaskCount];
-
-        scannerThread = new Thread(procImage);
-
-        fishCodeReader = new BarcodeReader();
-
-        orgImage = new Texture2D((int)cameraSize.x, (int)cameraSize.y, TextureFormat.RGBA32, false);
-
-        fishIDImage   = new AQTexture2D((int)codeSize.x, (int)codeSize.y);
-        interimImage  = new AQTexture2D((int)cameraSize.x, (int)cameraSize.y);
-
+		setCodeAndCameraArea();
+     
+		createObjects();
+       
         loadMaskImage();
 
         initCamera();
@@ -279,9 +338,9 @@ public class AQScanner : MonoBehaviour
 
         for (int i = 0; i < fishMaskCount; i++)
         {
-            tempImageName = "fishMask" + String.Format("{0:00}", i);
+            tempImageName = maskImageName + FILE_SEP+ String.Format("{0:00}", i);
 
-            tempMaskImage = new Texture2D((int)cameraSize.x, (int)cameraSize.y, TextureFormat.RGBA32, false);
+            tempMaskImage = new Texture2D((int)cameraSize.width, (int)cameraSize.height, TextureFormat.RGBA32, false);
 
             tempMaskImage = Resources.Load(tempImageName) as Texture2D;
 
@@ -314,8 +373,8 @@ public class AQScanner : MonoBehaviour
         if (camIndex >= 0)
         {
             cameraName = devices[camIndex].name;
-        
-            webCam = new WebCamTexture(cameraName , (int)cameraSize.x, (int)cameraSize.y, 1);
+
+            webCam = new WebCamTexture(cameraName, (int)cameraSize.width, (int)cameraSize.height, 1);
 
             webCam.deviceName = devices[camIndex].name; // because webcam is always 0
 
@@ -326,12 +385,13 @@ public class AQScanner : MonoBehaviour
 
             Debug.Log("camera resolution : " + webCam.width + " , " + webCam.height);
             Debug.Log("done : " + MethodBase.GetCurrentMethod().Name);
-        }else
+        }
+        else
         {
             isScannerReady = false;
             scannerMode = SCANNER_MODE.SIMULATION;
 
-            Debug.Log("the scanner mode is : "+scannerMode+" "+ MethodBase.GetCurrentMethod().Name);
+            Debug.Log("the scanner mode is : " + scannerMode + " " + MethodBase.GetCurrentMethod().Name);
             Debug.Log("failed : " + MethodBase.GetCurrentMethod().Name);
         }
     }
@@ -375,8 +435,8 @@ public class AQScanner : MonoBehaviour
 
         colorGray     = new Color32();
         finalColor    = new Color32();
-        tempTexture   = new Texture2D((int)codeSize.x, (int)codeSize.y);
-        fishIDTexture = new Texture2D((int)codeSize.x, (int)codeSize.y);
+        tempTexture   = new Texture2D((int)codeArea.width, (int)codeSize.y);
+        fishIDTexture = new Texture2D((int)codeArea.width, (int)codeSize.y);
 
 
        // tempTexture.SetPixels(fishIDPixels);
@@ -403,7 +463,7 @@ public class AQScanner : MonoBehaviour
 
         for (int y = scale; y < codeSize.y; y++)
         {
-            for (int x = scale; x < codeSize.x; x++)
+            for (int x = scale; x < codeArea.width; x++)
             {
                 finalColor.r = finalColor.g = finalColor.b = 0;
 
@@ -431,7 +491,7 @@ public class AQScanner : MonoBehaviour
         fishIDTexture.Apply();
     }*/
 
-    private void SharpenCameraImage2()
+    private void SharpenCameraImage2(int areaID)
     {
         Color colorGray, finalColor, tempColor;
         int matSize;
@@ -440,7 +500,7 @@ public class AQScanner : MonoBehaviour
         float offSet, factor, tempGray;
         float strength;
 
-  
+
         filter = new float[,] {
                     {-1, -1, -1, -1, -1},
                     {-1,  2,  2,  2, -1},
@@ -460,7 +520,7 @@ public class AQScanner : MonoBehaviour
         tempColor = new Color();
         colorGray = new Color();
         finalColor = new Color();
-         
+
         for (int y = 0; y < fishIDImage.height; y++)
         {
             for (int x = 0; x < fishIDImage.width; x++)
@@ -468,6 +528,12 @@ public class AQScanner : MonoBehaviour
                 tempColor = fishIDImage.GetPixel(x, y);
 
                 tempGray = (tempColor.r + tempColor.g + tempColor.b) / 3;
+
+                if (tempGray > 0.5f) //[001] image enhancement
+                {
+                    tempGray = 1.0f;
+                }
+
                 colorGray.r = tempGray;
                 colorGray.g = tempGray;
                 colorGray.b = tempGray;
@@ -477,9 +543,9 @@ public class AQScanner : MonoBehaviour
             }
         }
 
-        for (int x = scale; x < codeSize.x - scale; x++)
+		for (int x = scale; x < codeArea[areaID].width - scale; x++)
         {
-            for (int y = scale; y < codeSize.y - scale; y++)
+			for (int y = scale; y < codeArea[areaID].height - scale;y++)
             {
                 finalColor.r = finalColor.g = finalColor.b = 0;
 
@@ -505,8 +571,14 @@ public class AQScanner : MonoBehaviour
             }
         }
 
-        Debug.Log("Done : " + MethodBase.GetCurrentMethod().Name);
+		Debug.Log("Done : " + MethodBase.GetCurrentMethod().Name + " Area ID = " + areaID);
     }
+
+	private void optainFishIDImage(int areaID)
+	{      
+		fishIDImage.SetPixels(interimImage.GetPixels((int)codeArea[areaID].x, (int)codeArea[areaID].y,
+                                                               (int)codeArea[areaID].width, (int)codeArea[areaID].height));
+	}
 
     private void ObtainCameraImage()
     {
@@ -515,8 +587,8 @@ public class AQScanner : MonoBehaviour
 
         interimImage.SetPixels(orgImage.GetPixels(0, 0, orgImage.width, orgImage.height));
 
-        fishIDImage.SetPixels(orgImage.GetPixels(200, 0, (int)codeSize.x, (int)codeSize.y));
-
+		optainFishIDImage(0); // always from area id 0
+        
         Debug.Log("done : " + MethodBase.GetCurrentMethod().Name + "camera resolution : " + webCam.width + " , " + webCam.height);
     }
 
@@ -524,35 +596,51 @@ public class AQScanner : MonoBehaviour
     {
         orgImage = Resources.Load("defaultFishImage") as Texture2D;
 
-        interimImage.SetPixels(orgImage.GetPixels(0, 0, orgImage.width, orgImage.height));
+		interimImage.SetPixels(orgImage.GetPixels(0, 0, orgImage.width, orgImage.height));
 
-        fishIDImage.SetPixels(orgImage.GetPixels(200, 0, (int)codeSize.x, (int)codeSize.y));
-
+		optainFishIDImage(0); // always from area id 0
+       
         Debug.Log("done : " + MethodBase.GetCurrentMethod().Name);
     }
 
-    private void DetectQRCode()
+    private bool DetectQRCode()
     {
+        bool fishIDFound;
+        String[] tempString;
         ZXing.Result result;
 
+        fishID = 0; // just for init
+
+        fishIDFound = false;
+
+		fishCodeReader.AutoRotate = true;
+        fishCodeReader.Options.TryHarder = true;
+                      
         result = fishCodeReader.Decode(fishIDImage.GetPixels32(), fishIDImage.width, fishIDImage.height);
 
         if (result != null)
         {
             maskImageName = result.Text;
 
-            Debug.Log("ID detected " + maskImageName);
+            tempString = result.Text.Split(FILE_SEP);
 
-            fishID = 0; // just for test
+            if (tempString.Length == 3)
+            {
+                fishIDFound = true;
 
-            // here I need to find the index of fishID
+                fishID = Convert.ToInt32(tempString[2]);
+
+                Debug.Log("Fish ID detected " + fishID);
+            }
         }
-        else
+     
+
+        if (fishIDFound == false)
         {
-            fishID = 0;
-
-            Debug.Log(("Can't detect ID, this function will return default file name!"));
+            Debug.Log("Can't detect ID, this function will return default fish id which is 0");
         }
+
+		return fishIDFound;
     }
 
     private void ProcessFinalImage()
@@ -575,7 +663,7 @@ public class AQScanner : MonoBehaviour
         //interimImage.reverse();
 
         interimImage.flip(); // [001] flip 180degree by John. 5 May 2018
-         
+
         fishMasks[fishID].flip(); // [001] don't forget you need flip mask image as well. by John. 5 May 2018
 
         for (int y = 0; y < height; y++)
@@ -614,16 +702,16 @@ public class AQScanner : MonoBehaviour
 
         finalImage = null;
 
-        finalWidth  = (maxX - minX);
+        finalWidth = (maxX - minX);
         finalHeight = (maxY - minY);
 
-        finalImage = new AQTexture2D(finalWidth,finalHeight);
+        finalImage = new AQTexture2D(finalWidth, finalHeight);
 
         for (int y = minY; y < maxY; y++)
         {
             for (int x = minX; x < maxX; x++)
             {
-                finalImage.SetPixel((x-minX), (y-minY), interimImage.GetPixel(x, y));
+                finalImage.SetPixel((x - minX), (y - minY), interimImage.GetPixel(x, y));
             }
         }
 
@@ -637,13 +725,38 @@ public class AQScanner : MonoBehaviour
     {
         return webCam;
     }
-
+    
     private void procImage()
     {
-        SharpenCameraImage2();
+		int index;
+        
+		index = 0;
 
-        DetectQRCode();
+		while(true && scannerMode == SCANNER_MODE.ACTIVE)
+		{
+			Debug.Log("Scanning for area ID = " + index);
 
+			SharpenCameraImage2(index);
+
+			if (DetectQRCode() == true)
+			{
+				break;
+			}
+
+			Debug.Log("Can't find QR code, it will be scanned for area ID = " + index);
+
+			index++;
+
+			if (index <= 3)
+			{
+				optainFishIDImage(index);
+			}
+			else
+			{
+				break;
+			}
+		} 
+        
         ProcessFinalImage();
 
         isScannerBusy = false;
@@ -682,9 +795,9 @@ public class AQScanner : MonoBehaviour
 
     private void sendFinalImage()
     {
-        int curTime;
         Byte[] bytes;
-   
+        Texture2D tempTexture;
+
         isFishFileReady = false;
         finalFishTexture = new Texture2D(finalImage.width, finalImage.height, TextureFormat.RGBA32, false);
 
@@ -694,47 +807,68 @@ public class AQScanner : MonoBehaviour
 
         fishReadyEvent.Invoke(finalFishTexture);
 
-        // just keep this for testing
+        // [001] we need to save the raw image from camera when we install this system for the first time.
+        // because there is only way to make a fish mask with raw camera image.
+        // when you click 's' button with isDebugMode = true then it will save raw camera image then use this image to create a mask.
+       
+        if (isDebugMode == true && scannerMode == SCANNER_MODE.ACTIVE)
+        {
+            fishIDTestTexture.SetPixels32(fishIDImage.GetPixels32());
 
-        /*
+            fishIDTestTexture.Apply();
 
-        bytes = finalFishTexture.EncodeToPNG();
+            tempTexture = new Texture2D(webCam.width, webCam.height, TextureFormat.RGBA32, false);
 
-        fishName = fishNameHeader + String.Format("{0:00000}", 100);
+            tempTexture.SetPixels(webCam.GetPixels());
 
-        System.IO.File.WriteAllBytes(Application.dataPath + "/resources/" + fishName + ".png", bytes);
+            tempTexture.Apply();
 
-        curTime = Environment.TickCount;
+            bytes = tempTexture.EncodeToPNG();
 
-*/
+            fishName = fishNameHeader + String.Format("{0:00}", fishID);
+
+            System.IO.File.WriteAllBytes(Application.dataPath + "/resources/" + fishName + ".png", bytes);
+
+            Debug.Log("------ Raw camera image saved.-------------");
+        }
+
 
         Debug.Log("------ Scanning Done -------------");
     }
 
-	private void OnGUI()
+    private void OnGUI()
     {
-        if (finalFishTexture != null) // keep this code for future test.
+
+        if (isDebugMode == true && scannerMode == SCANNER_MODE.ACTIVE)
         {
-            //GUI.DrawTexture(new Rect(0, 0, finalFishTexture.width, finalFishTexture.height) , finalFishTexture, ScaleMode.ScaleAndCrop, true);
+            if (finalFishTexture != null)
+            {
+				GUI.DrawTexture(new Rect(fishIDTestTexture.width+100, 0, finalFishTexture.width, finalFishTexture.height), finalFishTexture, ScaleMode.ScaleAndCrop, true);
+            }
+            else
+            {
+                GUI.DrawTexture(new Rect(0, 0, 1920, 1080), webCam, ScaleMode.ScaleAndCrop, true);
+            }
+
+            if (fishIDTestTexture != null)
+            {
+                GUI.DrawTexture(new Rect(0, 0, fishIDTestTexture.width, fishIDTestTexture.height), fishIDTestTexture, ScaleMode.ScaleAndCrop, true);
+            }
         }
-        else
-        {
-            //GUI.DrawTexture(new Rect(0, 0, 1920, 1080), webCam, ScaleMode.ScaleAndCrop, true);
-        }
-	}
+
+    }
+
+
+
+    // public event handling area //////////////////////////////////
 
 
 
 
-	// public event handling area //////////////////////////////////
+    // public member method area ////////////////////////////////////
 
 
-
-
-	// public member method area ////////////////////////////////////
-
-
-	void Start()
+    void Start()
     {
         try
         {
@@ -747,7 +881,7 @@ public class AQScanner : MonoBehaviour
             Debug.LogException(e, this);
         }
     }
-        
+
     ~AQScanner()
     {
         Debug.Log("destroyed : " + MethodBase.GetCurrentMethod().Name);
@@ -755,7 +889,7 @@ public class AQScanner : MonoBehaviour
 
     void Update()
     {
-        
+
         if (Input.GetKeyUp("s") == true)
         {
             if (isScannerBusy == false)
@@ -767,7 +901,12 @@ public class AQScanner : MonoBehaviour
                 Debug.Log("scanner is busy, try later!" + MethodBase.GetCurrentMethod().Name);
             }
         }
-  
+
+        if (Input.GetKeyUp("d") == true) //[001] to press 'd' key it to turn on debug mode. in debug mode you can see the camera and extra image.
+        {
+            isDebugMode = !isDebugMode;
+        }
+
         if (isFishFileReady == true)
         {
             sendFinalImage();
