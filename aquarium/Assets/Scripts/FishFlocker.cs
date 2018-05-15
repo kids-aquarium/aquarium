@@ -6,6 +6,8 @@ public class FishFlocker : MonoBehaviour {
 
 	public FlockingParameters parameters;
 	public bool passParametersToFlock;
+	[Range(0, 1000)]
+	public float fishScale = 1;
 
 	void Start () {
 		//generateSeekPosition();
@@ -20,6 +22,9 @@ public class FishFlocker : MonoBehaviour {
 		}
 		if(Random.Range(0, 1000) < 5) {
 			//generateSeekPosition();
+		}
+		foreach (Transform child in transform) {
+			child.localScale = new Vector3(fishScale, fishScale, fishScale);
 		}
 	}
 
