@@ -7,8 +7,14 @@ public class FishFlocker : MonoBehaviour {
 	public FlockingParameters parameters;
 	public bool passParametersToFlock;
 
+	float minScale = 0;
+	float maxScale = 1000;
+	[Range(0, 1000)] // NB: need to match above
+	public float fishScale = 1;
+
 	void Start () {
 		//generateSeekPosition();
+		LoadPreferences();
 	}
 
 	void Update () {
@@ -21,6 +27,11 @@ public class FishFlocker : MonoBehaviour {
 		if(Random.Range(0, 1000) < 5) {
 			//generateSeekPosition();
 		}
+		foreach (Transform child in transform) {
+			child.localScale = new Vector3(fishScale, fishScale, fishScale);
+		}
+		if (fishScale < maxScale && Input.GetKey("up")) fishScale += 0.2f;
+		if (fishScale > minScale && Input.GetKey("down")) fishScale -= 0.2f;
 	}
 
 	public List<GameObject> getAllFish(){
@@ -38,6 +49,14 @@ public class FishFlocker : MonoBehaviour {
 
 	void OnValidate() {
 		parameters.OnValidate ();
+	}
+
+	void SavePreferences() {
+		PlayerPrefs.SetFloat("fishScale", fishScale);
+	}
+
+	void LoadPreferences() {
+		fishScale = PlayerPrefs.GetFloat("fishScale", fishScale);
 	}
 
 }

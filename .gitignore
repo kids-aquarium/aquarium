@@ -43,6 +43,8 @@ sysinfo.txt
 *.exe
 *.dll
 *_Data/
+*-mac.zip
+*-win64.zip
 
 # vim tags
 tags
