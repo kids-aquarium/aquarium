@@ -59,4 +59,8 @@ public class FishFlocker : MonoBehaviour {
 		fishScale = PlayerPrefs.GetFloat("fishScale", fishScale);
 	}
 
+	void OnApplicationQuit() {
+		SavePreferences();
+	}
+
 }
