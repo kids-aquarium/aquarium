@@ -1,4 +1,4 @@
-# aquarium v0.0.1
+# aquarium v0.0.2
 Unity parts of the project
 
 ## Requirements
