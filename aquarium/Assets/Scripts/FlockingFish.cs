@@ -53,6 +53,7 @@ public class FlockingParameters {
 
 	[Header("Boundaries")]
 	public bool useFrustumForBounds = true;
+	public bool useCurrentY         = false; // Always have fish try to get back to center of screen
 	public float minimumZ           = 0.0f;
 	public float maximumZ           = 20.0f;
 
@@ -263,9 +264,8 @@ public class FlockingFish : MonoBehaviour {
 			transform.position.z >= parameters.minimumZ && transform.position.z < parameters.maximumZ) {
 			return null;
 		} else {
-			bool keepCurrentY = true;
 			Vector3 c;
-			if (keepCurrentY) {
+			if (parameters.useCurrentY) {
 				c = new Vector3 (0.0f, transform.position.y, (parameters.minimumZ + parameters.maximumZ) / 2.0f);
 			} else {
 				c = new Vector3 (0.0f, 0.0f, (parameters.minimumZ + parameters.maximumZ) / 2.0f);
