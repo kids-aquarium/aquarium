@@ -1,5 +1,10 @@
-# aquarium v0.0.3
+# aquarium v0.0.4
 Unity parts of the project
+
+## Changelog
+### v0.0.4
+- Background assets
+- Swaying seaweed
 
 ## Requirements
 Unity 2018.1.0f2
