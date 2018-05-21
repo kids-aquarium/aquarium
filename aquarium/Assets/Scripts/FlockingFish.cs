@@ -80,6 +80,8 @@ public class FlockingParameters {
 
 public class FlockingFish : MonoBehaviour {
 	public FlockingParameters parameters;
+	private float BirthTime;
+	public float age;
 
 	Rigidbody rb;
 
@@ -90,6 +92,7 @@ public class FlockingFish : MonoBehaviour {
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
+		BirthTime = Time.timeSinceLevelLoad;
 	}
 
 	void OnValidate() {
@@ -133,6 +136,10 @@ public class FlockingFish : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+
+		age = Time.timeSinceLevelLoad - BirthTime;
+		Debug.Log(age);
+
 		MatchVelocity ();
 		ConstrainVelocityToLocalForward ();
 
