@@ -12,6 +12,12 @@ public class FishFlocker : MonoBehaviour {
 	[Range(0, 5000)] // NB: need to match above
 	public float fishScale = 1;
 
+	[Range(10, 50)] //NB: What's a good value here?
+	public float minimumPopulation = 2;
+
+	[Range(100, 10000)] //NB: What's a good value here?
+	public float oldAge = 10;
+
 	void Start () {
 		//generateSeekPosition();
 		LoadPreferences();
@@ -32,6 +38,39 @@ public class FishFlocker : MonoBehaviour {
 		}
 		if (fishScale < maxScale && Input.GetKey("up")) fishScale += 1f;
 		if (fishScale > minScale && Input.GetKey("down")) fishScale -= 1f;
+
+		List<GameObject> allFish = getAllFish();
+		int numFishes = allFish.Count;
+		int realFishCount = 0; //I probably don't need this variable as I can get the count for the aliveFish list.
+		List<GameObject> aliveFish = new List<GameObject>();
+
+		foreach(GameObject fish in allFish){
+			if(fish.GetComponent<FlockingFish>().dying == false){
+				aliveFish.Add(fish.gameObject);
+				realFishCount++;
+			}
+		}
+
+		if(realFishCount > minimumPopulation){
+			//Let's find the oldest fish in the alive fishes list.
+			GameObject oldestFish = null;
+			float oldestAge = 0;
+
+			foreach(GameObject fish in aliveFish){
+				if (fish.GetComponent<FlockingFish>().age > oldAge){
+					if(fish.GetComponent<FlockingFish>().age > oldestAge){
+						oldestFish = fish;
+						oldestAge = fish.GetComponent<FlockingFish>().age;
+					}
+				}
+			}
+
+			if(oldestFish != null){
+				oldestFish.GetComponent<FlockingFish>().dying = true;
+				Debug.Log("One fish set for dying.");
+			}
+	
+		}
 	}
 
 	public List<GameObject> getAllFish(){
