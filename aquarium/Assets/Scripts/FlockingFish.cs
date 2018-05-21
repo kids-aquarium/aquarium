@@ -80,12 +80,17 @@ public class FlockingParameters {
 
 public class FlockingFish : MonoBehaviour {
 	public FlockingParameters parameters;
+	
+	//Variables for population control.
 	private float BirthTime;
 	public float age;
 	public bool dying;
 
-	Rigidbody rb;
+	//NB: There might be a better way to set the deathbed. 
+	Vector3 deathBed = new Vector3(100, 0, 50); //this is roughly out of screen (+ a bit more) towards the right
+												//in Start() there's a chance for it to flip to screen left.
 
+	Rigidbody rb;
 
 	public VectorPid angularVelocityController = new VectorPid(0f, 0f, 0f);
 	public VectorPid headingController         = new VectorPid(0f, 0f, 0f);
@@ -93,8 +98,13 @@ public class FlockingFish : MonoBehaviour {
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
+		
 		BirthTime = Time.timeSinceLevelLoad;
 		dying = false;
+
+		int chance = Random.Range(0, 2);
+		if (chance == 1) deathBed.x *= -1; //change the x position of the deathBed randomly for each.
+
 	}
 
 	void OnValidate() {
@@ -142,12 +152,12 @@ public class FlockingFish : MonoBehaviour {
 		age = Time.timeSinceLevelLoad - BirthTime;
 		//Debug.Log(age);
 
-		if(!dying){
 		MatchVelocity ();
 		ConstrainVelocityToLocalForward ();
 
 		Vector3 targetHeading = transform.forward;
 
+		if(!dying){
 		Vector3? separation = Separate ();
 		Vector3? cohesion = Cohere ();
 		Vector3? alignment = Align ();
@@ -193,8 +203,23 @@ public class FlockingFish : MonoBehaviour {
 		turnTowardsHeading(targetHeading);
 		}
 
-		else{
-			Destroy(gameObject);
+		else {
+			Vector3 destination = deathBed;
+
+			Vector3 destinationHeading = destination - transform.position;
+			destinationHeading.Normalize ();
+			targetHeading += destinationHeading * parameters.destinationWeight;
+
+			targetHeading.Normalize();
+
+			turnTowardsHeading(targetHeading);
+
+			float distanceToDeathBed = Vector3.Distance(deathBed, transform.position);
+			
+			if(Mathf.Abs(distanceToDeathBed) < 15.0){
+				Destroy(gameObject);
+			}
+
 		}
 	}
 
