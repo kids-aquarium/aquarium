@@ -30,8 +30,8 @@ public class FishFlocker : MonoBehaviour {
 		foreach (Transform child in transform) {
 			child.localScale = new Vector3(fishScale, fishScale, fishScale);
 		}
-		if (fishScale < maxScale && Input.GetKey("up")) fishScale += 0.2f;
-		if (fishScale > minScale && Input.GetKey("down")) fishScale -= 0.2f;
+		if (fishScale < maxScale && Input.GetKey("up")) fishScale += 1f;
+		if (fishScale > minScale && Input.GetKey("down")) fishScale -= 1f;
 	}
 
 	public List<GameObject> getAllFish(){
