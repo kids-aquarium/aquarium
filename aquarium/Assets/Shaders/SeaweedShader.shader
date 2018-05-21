@@ -5,8 +5,9 @@
 		_XSpeed("X speed", Range(10, 50)) = 19
 		_YSpeed("Y speed", Range(10, 50)) = 23
 		_Rigidity("Rigidity", Range(1, 50)) = 20
-		_SwayDepth("Sway depth", Range(0, 1)) = 0.5
-		_YOffset("Y offset", float) = 0.5
+		_XSwayDepth("X Sway depth", Range(0, 1)) = 0.5
+		_ZSwayDepth("Z Sway depth", Range(0, 1)) = 0.5
+		_YOffset("Y offset (world coordinates)", float) = 0.5
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" "DisableBatching"="True" }
@@ -14,10 +15,10 @@
 		Pass {
 			Cull Off
 			CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
+      #pragma vertex vert
+      #pragma fragment frag
 			#pragma multi_compile_fog
-			//#pragma addshadow
+			#pragma addshadow
 
 			#include "UnityCG.cginc"
 
@@ -37,30 +38,35 @@
 			float _XSpeed;
 			float _YSpeed;
 			float _Rigidity;
-			float _SwayDepth;
+			float _XSwayDepth;
+			float _ZSwayDepth;
 			float _YOffset;
 
 			f_in vert (v_in i)
-            {
-                f_in o;
+      {
+        f_in o;
 				float3 wpos = mul(unity_ObjectToWorld, i.vertex.xyz);
-				float x = sin(wpos.x / _Rigidity + (_Time.x * _XSpeed)) * (i.vertex.y - _YOffset) * 5;
-				float z = sin(wpos.z / _Rigidity + (_Time.x * _YSpeed)) * (i.vertex.y - _YOffset) * 5;
-                //o.vertex = UnityObjectToClipPos(i.vertex);
+				float x = i.vertex.x;
+				float z = i.vertex.z;
+				if(wpos.y > _YOffset) {
+					x = sin(wpos.x / _Rigidity + (_Time.x * _XSpeed)) * (wpos.y - _YOffset) * 5;
+					z = sin(wpos.z / _Rigidity + (_Time.x * _YSpeed)) * (wpos.y - _YOffset) * 5;
+				}
+        //o.vertex = UnityObjectToClipPos(i.vertex);
 				o.vertex = i.vertex;
-				o.vertex.x += x * _SwayDepth;
-				o.vertex.y += z * _SwayDepth;
+				o.vertex.x += x * _XSwayDepth;
+				o.vertex.y += z * _ZSwayDepth;
 				o.vertex = UnityObjectToClipPos(o.vertex);
-                o.uv = TRANSFORM_TEX(i.uv, _MainTex);
-                return o;
-            }
+	      o.uv = TRANSFORM_TEX(i.uv, _MainTex);
+	      return o;
+      }
 
-            fixed4 frag (v_in i) : SV_Target
-            {
-                fixed4 col = tex2D(_MainTex, i.uv);
-                return col;
-            }
-            ENDCG
+      fixed4 frag (v_in i) : SV_Target
+      {
+          fixed4 col = tex2D(_MainTex, i.uv);
+          return col;
+      }
+      ENDCG
 		}
 
 	}

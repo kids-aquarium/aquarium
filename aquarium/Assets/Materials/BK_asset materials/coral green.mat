@@ -83,12 +83,17 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _Rigidity: 20
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _SwayDepth: 0.5
     - _UVSec: 0
     - _WorkflowMode: 1
+    - _XSpeed: 19
+    - _YOffset: 0.5
+    - _YSpeed: 23
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.66180134, g: 0.9811321, b: 0.8861523, a: 1}
