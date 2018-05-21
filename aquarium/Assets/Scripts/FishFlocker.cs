@@ -13,7 +13,7 @@ public class FishFlocker : MonoBehaviour {
 	public float fishScale = 1;
 
 	[Range(10, 50)] //NB: What's a good value here?
-	public float minimumPopulation = 2;
+	public int minimumPopulation = 3;
 
 	[Range(100, 10000)] //NB: What's a good value here?
 	public float oldAge = 10;

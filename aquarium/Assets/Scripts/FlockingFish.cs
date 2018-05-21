@@ -142,6 +142,7 @@ public class FlockingFish : MonoBehaviour {
 		age = Time.timeSinceLevelLoad - BirthTime;
 		//Debug.Log(age);
 
+		if(!dying){
 		MatchVelocity ();
 		ConstrainVelocityToLocalForward ();
 
@@ -190,6 +191,11 @@ public class FlockingFish : MonoBehaviour {
 
 		if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.yellow);
 		turnTowardsHeading(targetHeading);
+		}
+
+		else{
+			Destroy(gameObject);
+		}
 	}
 
 	void ConstrainVelocityToLocalForward() {
