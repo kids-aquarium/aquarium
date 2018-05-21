@@ -150,7 +150,6 @@ public class FlockingFish : MonoBehaviour {
 	void FixedUpdate () {
 
 		age = Time.timeSinceLevelLoad - BirthTime;
-		//Debug.Log(age);
 
 		MatchVelocity ();
 		ConstrainVelocityToLocalForward ();
@@ -158,52 +157,51 @@ public class FlockingFish : MonoBehaviour {
 		Vector3 targetHeading = transform.forward;
 
 		if(!dying){
-		Vector3? separation = Separate ();
-		Vector3? cohesion = Cohere ();
-		Vector3? alignment = Align ();
-		Vector3? destination = Destination ();
+			Vector3? separation = Separate ();
+			Vector3? cohesion = Cohere ();
+			Vector3? alignment = Align ();
+			Vector3? destination = Destination ();
 
-		Vector3? bounds = parameters.useFrustumForBounds ? CheckViewFrustum () : CheckBoundaries ();
-		if (bounds == null) {
-			if (cohesion != null) {
-				Vector3 cohesionHeading = cohesion.Value - transform.position;
-				cohesionHeading.Normalize ();
-				if(parameters.debugDrawings) Debug.DrawRay (transform.position, cohesionHeading, Color.red);
-				targetHeading += cohesionHeading * parameters.cohesionWeight;
-				if(parameters.debugDrawings) DrawPoint (cohesion.Value, Color.red, 1);
+			Vector3? bounds = parameters.useFrustumForBounds ? CheckViewFrustum () : CheckBoundaries ();
+			if (bounds == null) {
+				if (cohesion != null) {
+					Vector3 cohesionHeading = cohesion.Value - transform.position;
+					cohesionHeading.Normalize ();
+					if(parameters.debugDrawings) Debug.DrawRay (transform.position, cohesionHeading, Color.red);
+					targetHeading += cohesionHeading * parameters.cohesionWeight;
+					if(parameters.debugDrawings) DrawPoint (cohesion.Value, Color.red, 1);
+				}
+				if (separation != null) {
+					Vector3 separationHeading = separation.Value - transform.position;
+					separationHeading.Normalize ();
+					if(parameters.debugDrawings) Debug.DrawRay (transform.position, separationHeading, Color.green);
+					targetHeading += separationHeading * parameters.separationWeight;
+					if(parameters.debugDrawings) DrawPoint (separation.Value, Color.green, 1);
+				}
+				if (alignment != null) {
+					Vector3 alignmentHeading = alignment.Value - transform.position;
+					alignmentHeading.Normalize ();
+					if(parameters.debugDrawings) Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
+					targetHeading += alignmentHeading * parameters.alignmentWeight;
+					if(parameters.debugDrawings) DrawPoint (alignment.Value, Color.blue, 1);
+				}
+				if (destination != null) {
+					Vector3 destinationHeading = destination.Value - transform.position;
+					destinationHeading.Normalize ();
+					targetHeading += destinationHeading * parameters.destinationWeight;
+				}
 			}
-			if (separation != null) {
-				Vector3 separationHeading = separation.Value - transform.position;
-				separationHeading.Normalize ();
-				if(parameters.debugDrawings) Debug.DrawRay (transform.position, separationHeading, Color.green);
-				targetHeading += separationHeading * parameters.separationWeight;
-				if(parameters.debugDrawings) DrawPoint (separation.Value, Color.green, 1);
-			}
-			if (alignment != null) {
-				Vector3 alignmentHeading = alignment.Value - transform.position;
-				alignmentHeading.Normalize ();
-				if(parameters.debugDrawings) Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
-				targetHeading += alignmentHeading * parameters.alignmentWeight;
-				if(parameters.debugDrawings) DrawPoint (alignment.Value, Color.blue, 1);
-			}
-			if (destination != null) {
-				Vector3 destinationHeading = destination.Value - transform.position;
-				destinationHeading.Normalize ();
-				targetHeading += destinationHeading * parameters.destinationWeight;
-			}
-		}
 
-		if (bounds != null) {
-			targetHeading = bounds.Value - transform.position;
-			if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.cyan);
-		}
-		targetHeading.Normalize ();
+			if (bounds != null) {
+				targetHeading = bounds.Value - transform.position;
+				if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.cyan);
+			}
+			targetHeading.Normalize ();
 
-		if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.yellow);
-		turnTowardsHeading(targetHeading);
-		}
-
-		else {
+			if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.yellow);
+			turnTowardsHeading(targetHeading);
+			
+			} else {
 			Vector3 destination = deathBed;
 
 			Vector3 destinationHeading = destination - transform.position;
@@ -219,7 +217,6 @@ public class FlockingFish : MonoBehaviour {
 			if(Mathf.Abs(distanceToDeathBed) < 15.0){
 				Destroy(gameObject);
 			}
-
 		}
 	}
 

@@ -66,7 +66,6 @@ public class FishFlocker : MonoBehaviour {
 
 			if(oldestFish != null){
 				oldestFish.GetComponent<FlockingFish>().dying = true;
-				//Debug.Log("One fish set for dying.");
 			}
 	
 		}
