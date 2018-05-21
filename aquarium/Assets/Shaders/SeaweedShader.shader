@@ -2,8 +2,8 @@
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
-		_XSpeed("X speed", Range(10, 50)) = 19
-		_YSpeed("Y speed", Range(10, 50)) = 23
+		_XSpeed("X speed", Range(0, 50)) = 19
+		_YSpeed("Y speed", Range(0, 50)) = 23
 		_Rigidity("Rigidity", Range(1, 50)) = 20
 		_XSwayDepth("X Sway depth", Range(0, 1)) = 0.5
 		_ZSwayDepth("Z Sway depth", Range(0, 1)) = 0.5
