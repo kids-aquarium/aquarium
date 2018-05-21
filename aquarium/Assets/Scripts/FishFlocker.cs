@@ -40,16 +40,15 @@ public class FishFlocker : MonoBehaviour {
 		if (fishScale > minScale && Input.GetKey("down")) fishScale -= 1f;
 
 		List<GameObject> allFish = getAllFish();
-		int numFishes = allFish.Count;
-		int realFishCount = 0; //I probably don't need this variable as I can get the count for the aliveFish list.
 		List<GameObject> aliveFish = new List<GameObject>();
 
 		foreach(GameObject fish in allFish){
 			if(fish.GetComponent<FlockingFish>().dying == false){
 				aliveFish.Add(fish.gameObject);
-				realFishCount++;
 			}
 		}
+
+		int realFishCount = aliveFish.Count;
 
 		if(realFishCount > minimumPopulation){
 			//Let's find the oldest fish in the alive fishes list.
@@ -67,7 +66,7 @@ public class FishFlocker : MonoBehaviour {
 
 			if(oldestFish != null){
 				oldestFish.GetComponent<FlockingFish>().dying = true;
-				Debug.Log("One fish set for dying.");
+				//Debug.Log("One fish set for dying.");
 			}
 	
 		}
