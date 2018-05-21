@@ -98,34 +98,34 @@ public class FlockingFish : MonoBehaviour {
 
 	public static void DrawPoint (Vector3 pos, Color col, float scale)
 	{
-		Vector3[] points = new Vector3[] 
+		Vector3[] points = new Vector3[]
 		{
-			pos + (Vector3.up * scale), 
-			pos - (Vector3.up * scale), 
-			pos + (Vector3.right * scale), 
-			pos - (Vector3.right * scale), 
-			pos + (Vector3.forward * scale), 
+			pos + (Vector3.up * scale),
+			pos - (Vector3.up * scale),
+			pos + (Vector3.right * scale),
+			pos - (Vector3.right * scale),
+			pos + (Vector3.forward * scale),
 			pos - (Vector3.forward * scale)
-		}; 		
+		};
 
-		Debug.DrawLine (points[0], points[1], col ); 
-		Debug.DrawLine (points[2], points[3], col ); 
-		Debug.DrawLine (points[4], points[5], col ); 
+		Debug.DrawLine (points[0], points[1], col );
+		Debug.DrawLine (points[2], points[3], col );
+		Debug.DrawLine (points[4], points[5], col );
 
-		Debug.DrawLine (points[0], points[2], col ); 
-		Debug.DrawLine (points[0], points[3], col ); 
-		Debug.DrawLine (points[0], points[4], col ); 
-		Debug.DrawLine (points[0], points[5], col ); 
+		Debug.DrawLine (points[0], points[2], col );
+		Debug.DrawLine (points[0], points[3], col );
+		Debug.DrawLine (points[0], points[4], col );
+		Debug.DrawLine (points[0], points[5], col );
 
-		Debug.DrawLine (points[1], points[2], col ); 
-		Debug.DrawLine (points[1], points[3], col ); 
-		Debug.DrawLine (points[1], points[4], col ); 
-		Debug.DrawLine (points[1], points[5], col ); 
+		Debug.DrawLine (points[1], points[2], col );
+		Debug.DrawLine (points[1], points[3], col );
+		Debug.DrawLine (points[1], points[4], col );
+		Debug.DrawLine (points[1], points[5], col );
 
-		Debug.DrawLine (points[4], points[2], col ); 
-		Debug.DrawLine (points[4], points[3], col ); 
-		Debug.DrawLine (points[5], points[2], col ); 
-		Debug.DrawLine (points[5], points[3], col ); 
+		Debug.DrawLine (points[4], points[2], col );
+		Debug.DrawLine (points[4], points[3], col );
+		Debug.DrawLine (points[5], points[2], col );
+		Debug.DrawLine (points[5], points[3], col );
 
 	}
 
@@ -189,8 +189,10 @@ public class FlockingFish : MonoBehaviour {
 		Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
 		localVelocity.x = 0;
 		localVelocity.y = 0;
+		if(localVelocity.z < 0) localVelocity.z = 0;
 
-		rb.velocity = transform.TransformDirection(localVelocity);
+		Vector3 constrainedVelocity = transform.TransformDirection(localVelocity);
+		rb.velocity = constrainedVelocity;
 	}
 
 	void turnTowardsWorldPosition(Vector3 target) {
@@ -218,7 +220,7 @@ public class FlockingFish : MonoBehaviour {
 		if (desiredUp == null)
 			desiredUp = Vector3.up;
 		// local y points up, up control should happen as rotations about x and z axes
-		
+
 		var angularVelocityError = rb.angularVelocity * -1;
 		//Debug.Log (angularVelocityError);
 		//Debug.DrawRay(transform.position, rb.angularVelocity * 10, Color.black);
@@ -345,4 +347,3 @@ public class FlockingFish : MonoBehaviour {
 		return parameters.destination;
 	}
 }
-
