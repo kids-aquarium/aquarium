@@ -57,6 +57,9 @@ public class FlockingParameters {
 	public float minimumZ           = 0.0f;
 	public float maximumZ           = 20.0f;
 
+	[Header("Debug")]
+	public bool debugDrawings       = true;
+
 	public void OnValidate() {
 		minSpeed          = Mathf.Min (minSpeed, maxSpeed);
 		maxSpeed          = Mathf.Max (minSpeed, maxSpeed);
@@ -145,26 +148,23 @@ public class FlockingFish : MonoBehaviour {
 			if (cohesion != null) {
 				Vector3 cohesionHeading = cohesion.Value - transform.position;
 				cohesionHeading.Normalize ();
-				//Debug.DrawRay (transform.position, cohesionHeading, Color.red);
+				if(parameters.debugDrawings) Debug.DrawRay (transform.position, cohesionHeading, Color.red);
 				targetHeading += cohesionHeading * parameters.cohesionWeight;
-				//DrawPoint (cohesion.Value, Color.red, 1);
-				//turnTowardsWorldPosition (cohesion.Value);
+				if(parameters.debugDrawings) DrawPoint (cohesion.Value, Color.red, 1);
 			}
 			if (separation != null) {
 				Vector3 separationHeading = separation.Value - transform.position;
 				separationHeading.Normalize ();
-				//Debug.DrawRay (transform.position, separationHeading, Color.green);
+				if(parameters.debugDrawings) Debug.DrawRay (transform.position, separationHeading, Color.green);
 				targetHeading += separationHeading * parameters.separationWeight;
-				//DrawPoint (separation.Value, Color.green, 1);
-				//turnTowardsWorldPosition (separation.Value);
+				if(parameters.debugDrawings) DrawPoint (separation.Value, Color.green, 1);
 			}
 			if (alignment != null) {
 				Vector3 alignmentHeading = alignment.Value - transform.position;
 				alignmentHeading.Normalize ();
-				//Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
+				if(parameters.debugDrawings) Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
 				targetHeading += alignmentHeading * parameters.alignmentWeight;
-				//DrawPoint (alignment.Value, Color.blue, 1);
-				//turnTowardsWorldPosition (alignment.Value);
+				if(parameters.debugDrawings) DrawPoint (alignment.Value, Color.blue, 1);
 			}
 			if (destination != null) {
 				Vector3 destinationHeading = destination.Value - transform.position;
@@ -174,14 +174,12 @@ public class FlockingFish : MonoBehaviour {
 		}
 
 		if (bounds != null) {
-			targetHeading = bounds.Value - transform.localPosition;
-			Debug.DrawRay(transform.position, targetHeading);
+			targetHeading = bounds.Value - transform.position;
+			if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.cyan);
 		}
 		targetHeading.Normalize ();
 
-		//DrawPoint (target, Color.yellow, 1);
-		//turnTowards (transform.TransformPoint(separation));
-		Debug.DrawRay(transform.position, targetHeading);
+		if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.yellow);
 		turnTowardsHeading(targetHeading);
 	}
 

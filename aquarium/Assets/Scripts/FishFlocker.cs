@@ -8,8 +8,8 @@ public class FishFlocker : MonoBehaviour {
 	public bool passParametersToFlock;
 
 	float minScale = 0;
-	float maxScale = 1000;
-	[Range(0, 1000)] // NB: need to match above
+	float maxScale = 5000;
+	[Range(0, 5000)] // NB: need to match above
 	public float fishScale = 1;
 
 	void Start () {
