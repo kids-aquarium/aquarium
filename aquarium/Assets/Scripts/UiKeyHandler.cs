@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class UiKeyHandler : MonoBehaviour {
 
+	public GameObject fishManager;
+
 	void Start () {
 		
 	}
@@ -11,6 +13,9 @@ public class UiKeyHandler : MonoBehaviour {
 	void Update () {
 		if(Input.GetKeyDown(KeyCode.Escape)) {
 			foreach(Transform t in transform) t.gameObject.SetActive(!t.gameObject.active);
+			if(fishManager != null) {
+				fishManager.GetComponent<FishFlocker>().SavePreferences();
+			}
 		}
 	}
 }

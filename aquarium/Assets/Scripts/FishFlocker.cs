@@ -88,7 +88,7 @@ public class FishFlocker : MonoBehaviour {
 		parameters.OnValidate ();
 	}
 
-	void SavePreferences() {
+	public void SavePreferences() {
 		PlayerPrefs.SetFloat("fishScale", fishScale);
 	}
 
