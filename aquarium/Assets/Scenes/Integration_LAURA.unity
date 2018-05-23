@@ -19810,10 +19810,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 10
+    m_FontSize: 8
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
+    m_MinSize: 0
     m_MaxSize: 110
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -19821,7 +19821,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: (show / hide with ESC)
+  m_Text: (show / hide with ESC, automatically saved)
 --- !u!222 &1565696499
 CanvasRenderer:
   m_ObjectHideFlags: 0
