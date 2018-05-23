@@ -100,4 +100,8 @@ public class FishFlocker : MonoBehaviour {
 		SavePreferences();
 	}
 
+	public void SetFishScale(float scale) {
+		fishScale = scale;
+	}
+
 }
