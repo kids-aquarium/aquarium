@@ -104,4 +104,11 @@ public class FishFlocker : MonoBehaviour {
 		fishScale = scale;
 	}
 
+	public void SetFishMinimumSpeed(float minSpeed) {
+		parameters.minSpeed = minSpeed;
+	}
+
+	public void SetFishMaximumSpeed(float maxSpeed) {
+		parameters.maxSpeed = maxSpeed;
+	}
 }

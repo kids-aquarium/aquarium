@@ -38,8 +38,8 @@ public class VectorPid
 public class FlockingParameters {
 	public int 	 breed             = 0;
 	[Header("Physical parameters")]
-	public float minSpeed          = 0.1f;
-	public float maxSpeed          = 5.0f;
+	public float minSpeed          = 1.0f;
+	public float maxSpeed          = 10.0f;
 
 	[Header("Behaviour parameters")]
 	public float desiredSeparation = 1.0f;
@@ -283,6 +283,7 @@ public class FlockingFish : MonoBehaviour {
 	}
 
 	void MatchVelocity() {
+		Debug.Log("speed range: " + parameters.minSpeed + ", " + parameters.maxSpeed + ", current speed: " + rb.velocity.magnitude);
 		if (rb.velocity.magnitude <= parameters.minSpeed)
 			rb.AddRelativeForce (Vector3.forward);
 		if (rb.velocity.magnitude >= parameters.maxSpeed)
