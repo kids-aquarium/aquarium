@@ -283,7 +283,6 @@ public class FlockingFish : MonoBehaviour {
 	}
 
 	void MatchVelocity() {
-		Debug.Log("speed range: " + parameters.minSpeed + ", " + parameters.maxSpeed + ", current speed: " + rb.velocity.magnitude);
 		if (rb.velocity.magnitude <= parameters.minSpeed)
 			rb.AddRelativeForce (Vector3.forward);
 		if (rb.velocity.magnitude >= parameters.maxSpeed)
