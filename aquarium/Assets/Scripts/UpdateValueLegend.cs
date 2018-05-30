@@ -8,8 +8,10 @@ public class UpdateValueLegend : MonoBehaviour {
 	private Text text;
 
 	void Start () {
-		GetComponentInParent<Slider>().onValueChanged.AddListener(HandleValueChanged);
+		Slider s = GetComponentInParent<Slider>();
+		s.onValueChanged.AddListener(HandleValueChanged);
 		text = GetComponent<Text>();
+		text.text = string.Format(formatText, s.value);
 	}
 
 	private void HandleValueChanged(float value) {
