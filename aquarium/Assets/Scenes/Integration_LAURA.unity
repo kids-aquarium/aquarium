@@ -30384,7 +30384,8 @@ MonoBehaviour:
     debugDrawings: 1
   passParametersToFlock: 1
   fishScale: 456
-  minimumPopulation: 3
+  minimumPopulation: 2
+  maximumPopulation: 7
   oldAge: 10
 --- !u!4 &2115303562
 Transform:
