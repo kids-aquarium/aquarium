@@ -12,13 +12,13 @@ public class FishFlocker : MonoBehaviour {
 	[Range(0, 5000)] // NB: need to match above
 	public float fishScale = 1;
 
-	[Range(10, 20)] //NB: What's a good value here?
+	[Range(1, 50)] //NB: What's a good value here?
 	public int minimumPopulation = 10;
 
-	[Range(30, 50)] // NB: Minimum value should be more than the max of minimumPopulation. Also, good value?
+	[Range(1, 500)] // NB: Maximum value should be more than the max of minimumPopulation. Also, good value?
 	public int maximumPopulation = 30;
 
-	[Range(100, 10000)] //NB: What's a good value here?
+	[Range(10, 10000)] //NB: What's a good value here? For the record, 24 hours is 86400 seconds.
 	public float oldAge = 10000; // seconds
 
 	void Start () {
@@ -53,19 +53,19 @@ public class FishFlocker : MonoBehaviour {
 
 		int realFishCount = aliveFish.Count;
 
-		if(realFishCount > minimumPopulation){
+		if(realFishCount > minimumPopulation) {
 			GameObject oldestFish = findOldest(aliveFish);
 
 			if(oldestFish != null){
-				
 				if((oldestFish.GetComponent<FlockingFish>().age) > oldAge){
 					oldestFish.GetComponent<FlockingFish>().dying = true;
 				}
 
-				if(realFishCount > maximumPopulation){
-					oldestFish.GetComponent<FlockingFish>().dying = true;
-				} 
 			}
+		}
+		if(realFishCount > maximumPopulation){
+			GameObject oldestFish = findOldest(aliveFish);
+			oldestFish.GetComponent<FlockingFish>().dying = true;
 		}
 	}
 
@@ -74,12 +74,12 @@ public class FishFlocker : MonoBehaviour {
 		
 		GameObject oldestFish = null;
 
-			foreach(GameObject fish in fishes){
-				if(fish.GetComponent<FlockingFish>().age > oldestAge){
-					oldestFish = fish;
-					oldestAge = fish.GetComponent<FlockingFish>().age;
-				}
+		foreach(GameObject fish in fishes){
+			if(fish.GetComponent<FlockingFish>().age > oldestAge){
+				oldestFish = fish;
+				oldestAge = fish.GetComponent<FlockingFish>().age;
 			}
+		}
 
 		return oldestFish;
 	}
