@@ -38,8 +38,8 @@ public class VectorPid
 public class FlockingParameters {
 	public int 	 breed             = 0;
 	[Header("Physical parameters")]
-	public float minSpeed          = 0.1f;
-	public float maxSpeed          = 5.0f;
+	public float minSpeed          = 1.0f;
+	public float maxSpeed          = 10.0f;
 
 	[Header("Behaviour parameters")]
 	public float desiredSeparation = 1.0f;
@@ -80,9 +80,17 @@ public class FlockingParameters {
 
 public class FlockingFish : MonoBehaviour {
 	public FlockingParameters parameters;
+	
+	//Variables for population control.
+	private float BirthTime;
+	public float age;
+	public bool dying;
+
+	//NB: There might be a better way to set the deathbed. 
+	Vector3 deathBed = new Vector3(100, 0, 50); //this is roughly out of screen (+ a bit more) towards the right
+												//in Start() there's a chance for it to flip to screen left.
 
 	Rigidbody rb;
-
 
 	public VectorPid angularVelocityController = new VectorPid(0f, 0f, 0f);
 	public VectorPid headingController         = new VectorPid(0f, 0f, 0f);
@@ -90,6 +98,13 @@ public class FlockingFish : MonoBehaviour {
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
+		
+		BirthTime = Time.timeSinceLevelLoad;
+		dying = false;
+
+		int chance = Random.Range(0, 2);
+		if (chance == 1) deathBed.x *= -1; //change the x position of the deathBed randomly for each.
+
 	}
 
 	void OnValidate() {
@@ -133,54 +148,76 @@ public class FlockingFish : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+
+		age = Time.timeSinceLevelLoad - BirthTime;
+
 		MatchVelocity ();
 		ConstrainVelocityToLocalForward ();
 
 		Vector3 targetHeading = transform.forward;
 
-		Vector3? separation = Separate ();
-		Vector3? cohesion = Cohere ();
-		Vector3? alignment = Align ();
-		Vector3? destination = Destination ();
+		if(!dying){
+			Vector3? separation = Separate ();
+			Vector3? cohesion = Cohere ();
+			Vector3? alignment = Align ();
+			Vector3? destination = Destination ();
 
-		Vector3? bounds = parameters.useFrustumForBounds ? CheckViewFrustum () : CheckBoundaries ();
-		if (bounds == null) {
-			if (cohesion != null) {
-				Vector3 cohesionHeading = cohesion.Value - transform.position;
-				cohesionHeading.Normalize ();
-				if(parameters.debugDrawings) Debug.DrawRay (transform.position, cohesionHeading, Color.red);
-				targetHeading += cohesionHeading * parameters.cohesionWeight;
-				if(parameters.debugDrawings) DrawPoint (cohesion.Value, Color.red, 1);
+			Vector3? bounds = parameters.useFrustumForBounds ? CheckViewFrustum () : CheckBoundaries ();
+			if (bounds == null) {
+				if (cohesion != null) {
+					Vector3 cohesionHeading = cohesion.Value - transform.position;
+					cohesionHeading.Normalize ();
+					if(parameters.debugDrawings) Debug.DrawRay (transform.position, cohesionHeading, Color.red);
+					targetHeading += cohesionHeading * parameters.cohesionWeight;
+					if(parameters.debugDrawings) DrawPoint (cohesion.Value, Color.red, 1);
+				}
+				if (separation != null) {
+					Vector3 separationHeading = separation.Value - transform.position;
+					separationHeading.Normalize ();
+					if(parameters.debugDrawings) Debug.DrawRay (transform.position, separationHeading, Color.green);
+					targetHeading += separationHeading * parameters.separationWeight;
+					if(parameters.debugDrawings) DrawPoint (separation.Value, Color.green, 1);
+				}
+				if (alignment != null) {
+					Vector3 alignmentHeading = alignment.Value - transform.position;
+					alignmentHeading.Normalize ();
+					if(parameters.debugDrawings) Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
+					targetHeading += alignmentHeading * parameters.alignmentWeight;
+					if(parameters.debugDrawings) DrawPoint (alignment.Value, Color.blue, 1);
+				}
+				if (destination != null) {
+					Vector3 destinationHeading = destination.Value - transform.position;
+					destinationHeading.Normalize ();
+					targetHeading += destinationHeading * parameters.destinationWeight;
+				}
 			}
-			if (separation != null) {
-				Vector3 separationHeading = separation.Value - transform.position;
-				separationHeading.Normalize ();
-				if(parameters.debugDrawings) Debug.DrawRay (transform.position, separationHeading, Color.green);
-				targetHeading += separationHeading * parameters.separationWeight;
-				if(parameters.debugDrawings) DrawPoint (separation.Value, Color.green, 1);
+
+			if (bounds != null) {
+				targetHeading = bounds.Value - transform.position;
+				if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.cyan);
 			}
-			if (alignment != null) {
-				Vector3 alignmentHeading = alignment.Value - transform.position;
-				alignmentHeading.Normalize ();
-				if(parameters.debugDrawings) Debug.DrawRay (transform.position, alignmentHeading, Color.blue);
-				targetHeading += alignmentHeading * parameters.alignmentWeight;
-				if(parameters.debugDrawings) DrawPoint (alignment.Value, Color.blue, 1);
-			}
-			if (destination != null) {
-				Vector3 destinationHeading = destination.Value - transform.position;
-				destinationHeading.Normalize ();
-				targetHeading += destinationHeading * parameters.destinationWeight;
+			targetHeading.Normalize ();
+
+			if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.yellow);
+			turnTowardsHeading(targetHeading);
+			
+			} else {
+			Vector3 destination = deathBed;
+
+			Vector3 destinationHeading = destination - transform.position;
+			destinationHeading.Normalize ();
+			targetHeading += destinationHeading * parameters.destinationWeight;
+
+			targetHeading.Normalize();
+
+			turnTowardsHeading(targetHeading);
+
+			float distanceToDeathBed = Vector3.Distance(deathBed, transform.position);
+			
+			if(Mathf.Abs(distanceToDeathBed) < 15.0){
+				Destroy(gameObject);
 			}
 		}
-
-		if (bounds != null) {
-			targetHeading = bounds.Value - transform.position;
-			if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.cyan);
-		}
-		targetHeading.Normalize ();
-
-		if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.yellow);
-		turnTowardsHeading(targetHeading);
 	}
 
 	void ConstrainVelocityToLocalForward() {
