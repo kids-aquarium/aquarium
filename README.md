@@ -1,7 +1,11 @@
-# aquarium v0.0.4
+# aquarium v0.0.5
 Unity parts of the project
 
 ## Changelog
+### v0.0.5
+- Population management
+- Settings menu and saving and loading preferences
+
 ### v0.0.4
 - Background assets
 - Swaying seaweed
