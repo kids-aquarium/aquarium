@@ -65,7 +65,7 @@ public class FishFlocker : MonoBehaviour {
 		}
 		if(realFishCount > maximumPopulation){
 			GameObject oldestFish = findOldest(aliveFish);
-			oldestFish.GetComponent<FlockingFish>().dying = true;
+			if(oldestFish != null) { oldestFish.GetComponent<FlockingFish>().dying = true; }
 		}
 	}
 
@@ -105,12 +105,18 @@ public class FishFlocker : MonoBehaviour {
 		PlayerPrefs.SetFloat("fishScale", fishScale);
 		PlayerPrefs.SetFloat("fishMinimumSpeed", parameters.minSpeed);
 		PlayerPrefs.SetFloat("fishMaximumSpeed", parameters.maxSpeed);
+		PlayerPrefs.SetInt  ("minimumPopulation", minimumPopulation);
+		PlayerPrefs.SetInt  ("maximumPopulation", maximumPopulation);
+		PlayerPrefs.SetFloat("oldAge", oldAge);
 	}
 
 	void LoadPreferences() {
-		fishScale = PlayerPrefs.GetFloat("fishScale", fishScale);
+		fishScale = PlayerPrefs.GetFloat("fishScale");
 		parameters.minSpeed = PlayerPrefs.GetFloat("fishMinimumSpeed");
 		parameters.maxSpeed = PlayerPrefs.GetFloat("fishMaximumSpeed");
+		minimumPopulation = PlayerPrefs.GetInt("minimumPopulation");
+		maximumPopulation = PlayerPrefs.GetInt("maximumPopulation");
+		oldAge = PlayerPrefs.GetFloat("oldAge");
 	}
 
 	void OnApplicationQuit() {
@@ -127,5 +133,17 @@ public class FishFlocker : MonoBehaviour {
 
 	public void SetFishMaximumSpeed(float maxSpeed) {
 		parameters.maxSpeed = maxSpeed;
+	}
+
+	public void SetMinimumPopulation(float minimumPopulation) {
+		this.minimumPopulation = Mathf.RoundToInt(minimumPopulation);
+	}
+
+	public void SetMaximumPopulation(float maximumPopulation) {
+		this.maximumPopulation = Mathf.RoundToInt(maximumPopulation);
+	}
+
+	public void SetOldAge(float oldAge) {
+		this.oldAge = oldAge;
 	}
 }
