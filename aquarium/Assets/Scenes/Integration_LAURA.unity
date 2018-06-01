@@ -20324,7 +20324,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2115303561}
-        m_MethodName: SetFishMinimumSpeed
+        m_MethodName: SetFishMaximumSpeed
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -32335,7 +32335,8 @@ MonoBehaviour:
     debugDrawings: 1
   passParametersToFlock: 1
   fishScale: 0
-  minimumPopulation: 3
+  minimumPopulation: 2
+  maximumPopulation: 7
   oldAge: 10
 --- !u!4 &2115303562
 Transform:
