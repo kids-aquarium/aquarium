@@ -38,8 +38,8 @@ public class VectorPid
 public class FlockingParameters {
 	public int 	 breed             = 0;
 	[Header("Physical parameters")]
-	public float minSpeed          = 0.1f;
-	public float maxSpeed          = 5.0f;
+	public float minSpeed          = 1.0f;
+	public float maxSpeed          = 10.0f;
 
 	[Header("Behaviour parameters")]
 	public float desiredSeparation = 1.0f;
