@@ -101,16 +101,31 @@ public class FishFlocker : MonoBehaviour {
 		parameters.OnValidate ();
 	}
 
-	void SavePreferences() {
+	public void SavePreferences() {
 		PlayerPrefs.SetFloat("fishScale", fishScale);
+		PlayerPrefs.SetFloat("fishMinimumSpeed", parameters.minSpeed);
+		PlayerPrefs.SetFloat("fishMaximumSpeed", parameters.maxSpeed);
 	}
 
 	void LoadPreferences() {
 		fishScale = PlayerPrefs.GetFloat("fishScale", fishScale);
+		parameters.minSpeed = PlayerPrefs.GetFloat("fishMinimumSpeed");
+		parameters.maxSpeed = PlayerPrefs.GetFloat("fishMaximumSpeed");
 	}
 
 	void OnApplicationQuit() {
 		SavePreferences();
 	}
 
+	public void SetFishScale(float scale) {
+		fishScale = scale;
+	}
+
+	public void SetFishMinimumSpeed(float minSpeed) {
+		parameters.minSpeed = minSpeed;
+	}
+
+	public void SetFishMaximumSpeed(float maxSpeed) {
+		parameters.maxSpeed = maxSpeed;
+	}
 }
