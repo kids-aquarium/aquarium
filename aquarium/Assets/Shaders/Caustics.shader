@@ -24,6 +24,7 @@
 
 			struct f_in {
 				float2 uv : TEXCOORD0;
+				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
 			};
 
@@ -38,12 +39,14 @@
 				f_in o;
 				o.vertex = UnityObjectToClipPos(i.vertex);
 				o.uv = TRANSFORM_TEX(i.uv, _MainTex);
+				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
 
 			fixed4 frag (f_in i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
+				UNITY_APPLY_FOG(i.fogCoord, col);
 				fixed4 caustics = fixed4(0, 0, 0, 0);
 				for(int octave = 1; octave <= OCTAVES; octave++) {
 					caustics.rgb += (cnoise(float3(octave * i.uv.x, octave * i.uv.y, _Time.y)) / octave);
