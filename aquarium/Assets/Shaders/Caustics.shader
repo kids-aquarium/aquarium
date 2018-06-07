@@ -2,6 +2,7 @@
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		_CausticsIntensity("Caustics intensity", Range(0, 1)) = 0.5
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -29,6 +30,7 @@
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 			fixed4 _Color;
+			float _CausticsIntensity;
 			static const int OCTAVES = 5;
 
 			f_in vert (v_in i)
@@ -42,12 +44,21 @@
 			fixed4 frag (f_in i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
-				fixed4 caustics = fixed4(0, 0, 0, 1);
+				fixed4 caustics = fixed4(0, 0, 0, 0);
 				for(int octave = 1; octave <= OCTAVES; octave++) {
-					caustics.rgb = (1+cnoise(float3(octave * i.uv.x, octave * i.uv.y, _Time.y)) / octave) / 2;
-				}
-				return caustics;
-				//return col + caustics;
+					caustics.rgb += (cnoise(float3(octave * i.uv.x, octave * i.uv.y, _Time.y)) / octave);
+				} // it sure ain't pretty...
+				caustics -= fixed4(0.7, 0.7, 0.7, 0);
+				caustics.x = abs(caustics.x);
+				caustics.y = abs(caustics.y);
+				caustics.z = abs(caustics.z);
+				caustics = fixed4(1, 1, 1, 1) - caustics;
+				caustics.x = abs(caustics.x);
+				caustics.y = abs(caustics.y);
+				caustics.z = abs(caustics.z);
+				caustics *= caustics * caustics;
+				caustics *= _CausticsIntensity;
+				return col + caustics;
 			}
 			ENDCG
 		}
