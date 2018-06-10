@@ -34,6 +34,11 @@
 			float _CausticsIntensity;
 			static const int OCTAVES = 5;
 
+			float map(float x0, float y0, float x1, float y1, float v)
+			{
+				return (v - x0) / (y0 - x0) * (y1 - x1) + x1;
+			}
+
 			f_in vert (v_in i)
 			{
 				f_in o;
@@ -47,20 +52,20 @@
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
 				UNITY_APPLY_FOG(i.fogCoord, col);
-				fixed4 caustics = fixed4(0, 0, 0, 0);
+				float caustics = 0;
 				for(int octave = 1; octave <= OCTAVES; octave++) {
-					caustics.rgb += (cnoise(float3(octave * i.uv.x, octave * i.uv.y, _Time.y)) / octave);
-				} // it sure ain't pretty...
-				caustics -= fixed4(0.7, 0.7, 0.7, 0);
-				caustics.x = abs(caustics.x);
-				caustics.y = abs(caustics.y);
-				caustics.z = abs(caustics.z);
-				caustics = fixed4(1, 1, 1, 1) - caustics;
-				caustics.x = abs(caustics.x);
-				caustics.y = abs(caustics.y);
-				caustics.z = abs(caustics.z);
-				caustics *= caustics * caustics;
+					caustics += (cnoise(float3(octave * i.uv.x, octave * i.uv.y, _Time.y)) / octave);
+				}
+
+				caustics = abs(caustics);
+				if(caustics < 0.4) caustics = 0;
+				else if(caustics < 0.5) caustics = map(0.4, 0.5, 0.0, 1.0, caustics);
+				else if(caustics < 0.6) caustics = 1;
+				else if(caustics < 0.7) caustics = map(0.6, 0.7, 1.0, 0.0, caustics);
+				else caustics = 0;
+
 				caustics *= _CausticsIntensity;
+
 				return col + caustics;
 			}
 			ENDCG
