@@ -3,6 +3,8 @@
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_CausticsIntensity("Caustics intensity", Range(0, 1)) = 0.5
+		_CausticsWidth("Caustics width", Range(0, 0.5)) = 0.05
+		_CausticsFeather("Caustics feather width", Range(0, 0.5)) = 0.1
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -32,6 +34,8 @@
 			float4 _MainTex_ST;
 			fixed4 _Color;
 			float _CausticsIntensity;
+			float _CausticsWidth;
+			float _CausticsFeather;
 			static const int OCTAVES = 5;
 
 			float map(float x0, float y0, float x1, float y1, float v)
@@ -58,11 +62,15 @@
 				}
 
 				caustics = abs(caustics);
-				if(caustics < 0.4) caustics = 0;
-				else if(caustics < 0.5) caustics = map(0.4, 0.5, 0.0, 1.0, caustics);
-				else if(caustics < 0.6) caustics = 1;
-				else if(caustics < 0.7) caustics = map(0.6, 0.7, 1.0, 0.0, caustics);
-				else caustics = 0;
+
+				float feather = _CausticsFeather;
+				float width = _CausticsWidth;
+
+				if(caustics < 0.5 - width - feather) caustics = 0.0;
+				else if(caustics < 0.5 - width) caustics = map(0.5 - width - feather, 0.5 - width, 0.0, 1.0, caustics);
+				else if(caustics < 0.5 + width) caustics = 1.0;
+				else if(caustics < 0.5 + width + feather) caustics = map(0.5 + width, 0.5 + width + feather, 1.0, 0.0, caustics);
+				else caustics = 0.0;
 
 				caustics *= _CausticsIntensity;
 

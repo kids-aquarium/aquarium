@@ -62,7 +62,9 @@ Material:
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
+    - _CausticsFeather: 0.05
     - _CausticsIntensity: 0.3
+    - _CausticsWidth: 0.02
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
