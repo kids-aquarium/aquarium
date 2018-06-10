@@ -64,6 +64,7 @@ Material:
     - _BumpScale: 1
     - _CausticsFeather: 0.05
     - _CausticsIntensity: 0.3
+    - _CausticsScale: 1
     - _CausticsSpeed: 0.5
     - _CausticsWidth: 0.02
     - _Cull: 2
