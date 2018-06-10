@@ -5,6 +5,7 @@
 		_CausticsIntensity("Caustics intensity", Range(0, 1)) = 0.5
 		_CausticsWidth("Caustics width", Range(0, 0.5)) = 0.05
 		_CausticsFeather("Caustics feather width", Range(0, 0.5)) = 0.1
+		_CausticsSpeed("Caustics speed", Float) = 0.5
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -36,6 +37,7 @@
 			float _CausticsIntensity;
 			float _CausticsWidth;
 			float _CausticsFeather;
+			float _CausticsSpeed;
 			static const int OCTAVES = 5;
 
 			float map(float x0, float y0, float x1, float y1, float v)
@@ -58,7 +60,7 @@
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				float caustics = 0;
 				for(int octave = 1; octave <= OCTAVES; octave++) {
-					caustics += (cnoise(float3(octave * i.uv.x, octave * i.uv.y, _Time.y)) / octave);
+					caustics += (cnoise(float3(octave * i.uv.x, octave * i.uv.y, _CausticsSpeed * _Time.y)) / octave);
 				}
 
 				caustics = abs(caustics);
