@@ -1,15 +1,14 @@
-﻿<Properties StartupConfiguration="{1D6D69B9-D03A-FF86-3E9C-9BCABE37F03A}|">
+﻿<Properties StartupConfiguration="{3D5BA5E2-5D88-064B-769A-27E8467DE1B2}|">
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/AQScanner.cs">
     <Files>
-      <File FileName="Assets/Scripts/AQScanner.cs" Line="69" Column="70" />
+      <File FileName="Assets/Scripts/AQScanner.cs" Line="576" Column="37" />
       <File FileName="Assets/Scripts/InstantFish.cs" Line="42" Column="37" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/jlsy012/Library/Mobile Documents/com~apple~CloudDocs/Aalto Docs/Classes/Projects/Hospital/aquarium/aquarium/Assets/Scripts/AQScanner.cs" relfile="Assets/Scripts/AQScanner.cs" line="777" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.ItemProperties.aquarium PreferredExecutionTarget="Unity.Editor" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

@@ -222,13 +222,11 @@ public class AQScanner : MonoBehaviour
 
     private char FILE_SEP; // this is file name separator
     private SCANNER_MODE scannerMode;
-    private bool isScannerReady;
     private bool isFishFileReady;
     private bool isScannerBusy;
     private bool isDebugMode;
     private int fishID;
     private int fishMaskCount;
-    private int lastTime;
     private Rect cameraSize;
     private Rect []codeArea;
     private String maskImageName;
@@ -296,8 +294,6 @@ public class AQScanner : MonoBehaviour
 
     private void initDefaultData()
     {
-        lastTime = 0;
-
         fishID = 0; // if scanner module couldn't found QR code then just use fish 0 as default.
 
         fishMaskCount = 10;
@@ -308,7 +304,6 @@ public class AQScanner : MonoBehaviour
         webCam = null;
         scannerThread = null;
         isScannerBusy = false;
-        isScannerReady = true;
 		isDebugMode = false; // use this flag to turn on/off debug mode
 
         scannerMode = SCANNER_MODE.SIMULATION;
@@ -380,7 +375,6 @@ public class AQScanner : MonoBehaviour
 
             webCam.Play();
 
-            isScannerReady = true;
             scannerMode = SCANNER_MODE.ACTIVE;
 
             Debug.Log("camera resolution : " + webCam.width + " , " + webCam.height);
@@ -388,7 +382,6 @@ public class AQScanner : MonoBehaviour
         }
         else
         {
-            isScannerReady = false;
             scannerMode = SCANNER_MODE.SIMULATION;
 
             Debug.Log("the scanner mode is : " + scannerMode + " " + MethodBase.GetCurrentMethod().Name);
@@ -509,7 +502,7 @@ public class AQScanner : MonoBehaviour
                     {-1, -1, -1, -1, -1}
                 };
 
-        strength = 1.0f;
+        strength = 1.0f; //[002] , if you see too bright of QR image then reduce this number. 1.0 is default
         offSet = (1.0f - strength);
         factor = (strength / 16.0f);
 
@@ -660,12 +653,6 @@ public class AQScanner : MonoBehaviour
         width = interimImage.width;
         height = interimImage.height;
 
-        //interimImage.reverse();
-
-        //interimImage.flip(); // [001] flip 180degree by John. 5 May 2018
-
-        //fishMasks[fishID].flip(); // [001] don't forget you need flip mask image as well. by John. 5 May 2018
-
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -715,7 +702,7 @@ public class AQScanner : MonoBehaviour
             }
         }
 
-        finalImage.flip();
+        finalImage.flip(); //[002] make sure we need to flip because of the up vector of the camera. John. 2018.06.15
 
         Debug.Log("The final image is ready!");
         Debug.Log("Done :" + MethodBase.GetCurrentMethod().Name);
@@ -767,8 +754,6 @@ public class AQScanner : MonoBehaviour
     private void GoFishing()
     {
         isScannerBusy = true;
-
-        lastTime = Environment.TickCount;
 
         Debug.Log("------ Scanning Started ------------- ");
 
