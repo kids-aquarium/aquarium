@@ -300,7 +300,7 @@ public class AQScanner : MonoBehaviour
 
         fishID = 0; // if scanner module couldn't found QR code then just use fish 0 as default.
 
-        fishMaskCount = 6;
+        fishMaskCount = 10;
 
 		isFishFileReady = false;
 
@@ -509,7 +509,7 @@ public class AQScanner : MonoBehaviour
                     {-1, -1, -1, -1, -1}
                 };
 
-        strength = 2.0f;
+        strength = 1.0f;
         offSet = (1.0f - strength);
         factor = (strength / 16.0f);
 
@@ -651,20 +651,20 @@ public class AQScanner : MonoBehaviour
         int maxX, maxY;
         int finalWidth, finalHeight;
 
-        minX = 1000;
-        minY = 1000;
-
-        maxX = -1000;
-        maxY = -1000;
+        minX = 2000;
+        minY = 2000;
+        
+        maxX = -2000;
+        maxY = -2000;
 
         width = interimImage.width;
         height = interimImage.height;
 
         //interimImage.reverse();
 
-        interimImage.flip(); // [001] flip 180degree by John. 5 May 2018
+        //interimImage.flip(); // [001] flip 180degree by John. 5 May 2018
 
-        fishMasks[fishID].flip(); // [001] don't forget you need flip mask image as well. by John. 5 May 2018
+        //fishMasks[fishID].flip(); // [001] don't forget you need flip mask image as well. by John. 5 May 2018
 
         for (int y = 0; y < height; y++)
         {
@@ -714,6 +714,8 @@ public class AQScanner : MonoBehaviour
                 finalImage.SetPixel((x - minX), (y - minY), interimImage.GetPixel(x, y));
             }
         }
+
+        finalImage.flip();
 
         Debug.Log("The final image is ready!");
         Debug.Log("Done :" + MethodBase.GetCurrentMethod().Name);
@@ -802,7 +804,7 @@ public class AQScanner : MonoBehaviour
         finalFishTexture = new Texture2D(finalImage.width, finalImage.height, TextureFormat.RGBA32, false);
 
         finalFishTexture.SetPixels(finalImage.GetPixels());
-
+        
         finalFishTexture.Apply();
 
         fishReadyEvent.Invoke(finalFishTexture);
@@ -854,6 +856,7 @@ public class AQScanner : MonoBehaviour
             {
                 GUI.DrawTexture(new Rect(0, 0, fishIDTestTexture.width, fishIDTestTexture.height), fishIDTestTexture, ScaleMode.ScaleAndCrop, true);
             }
+
         }
 
     }
