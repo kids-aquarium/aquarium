@@ -8,6 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Integration.unity
     guid: 136db3ec47d9d473cb08004d340dc427
+  - enabled: 1
+    path: Assets/Scenes/Integration_LAURA.unity
+    guid: efa84474eeba242e0908b0205bb1f5cc
+  m_configObjects: {}
