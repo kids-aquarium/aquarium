@@ -73,11 +73,13 @@ Material:
     - Vector1_4A1F6403: 1
     - Vector1_66C000AD: 100
     - _AlphaClip: 0
+    - _AmbientIntensity: 0.78
     - _Blend: 0
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DiffuseIntensity: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5

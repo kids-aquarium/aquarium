@@ -8,6 +8,7 @@
 		_CausticsSpeed("Caustics speed", Float) = 0.5
 		_CausticsScale("Caustics scale", Float) = 1.0
 		_AmbientIntensity("Ambient intensity", Range(0, 1)) = 1.0
+		_DiffuseIntensity("Diffuse intensity", Range(0, 1)) = 1.0
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -46,6 +47,7 @@
 			float _CausticsSpeed;
 			float _CausticsScale;
 			float _AmbientIntensity;
+			float _DiffuseIntensity;
 			static const int OCTAVES = 5;
 
 			float map(float x0, float y0, float x1, float y1, float v)
@@ -91,7 +93,7 @@
 				float ldn = saturate(dot(i.worldNormal, lightDirection));
 				caustics *= ldn;
 
-				float4 diffuse = _LightColor0 * ldn;
+				float4 diffuse = _DiffuseIntensity * _LightColor0 * ldn;
 
 				float4 ambient = _AmbientIntensity * float4(UNITY_LIGHTMODEL_AMBIENT.rgb * col.rgb, 1);
 				return col * diffuse + ambient + caustics;
