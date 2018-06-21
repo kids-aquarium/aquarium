@@ -7,8 +7,8 @@
 		_CausticsFeather("Caustics feather width", Range(0, 0.5)) = 0.1
 		_CausticsSpeed("Caustics speed", Float) = 0.5
 		_CausticsScale("Caustics scale", Float) = 1.0
-		_AmbientIntensity("Ambient intensity", Range(0, 1)) = 1.0
-		_DiffuseIntensity("Diffuse intensity", Range(0, 1)) = 1.0
+		_AmbientIntensity("Ambient intensity", Range(0, 5)) = 1.0
+		_DiffuseIntensity("Diffuse intensity", Range(0, 5)) = 1.0
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
