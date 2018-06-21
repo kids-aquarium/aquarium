@@ -13,7 +13,13 @@
 //    you can call this function inside ProcessFinalImage, don't forget you also should flip mask iamge as well.
 //
 //
-// 2. 
+// 21 June 2018, scanner_enhancement_002.
+//
+// 1. Fixed minor bug that there was offset when user clicked 's' key.
+//
+// 2. Added new 10 fish templates
+//
+// 3. Added new 10 fish masks
 
 
 
