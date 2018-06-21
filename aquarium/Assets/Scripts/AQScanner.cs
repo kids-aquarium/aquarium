@@ -502,7 +502,7 @@ public class AQScanner : MonoBehaviour
                     {-1, -1, -1, -1, -1}
                 };
 
-        strength = 1.0f; //[002] , if you see too bright of QR image then reduce this number. 1.0 is default
+        strength = 0.5f; //[002] , if you see too bright of QR image then reduce this number. 1.0 is default
         offSet = (1.0f - strength);
         factor = (strength / 16.0f);
 
@@ -662,7 +662,7 @@ public class AQScanner : MonoBehaviour
 
                 interimImage.SetPixel(x, y, colorOrgImage);
 
-                if (colorOrgImage.a.Equals(0.0f) == false)
+                if (colorOrgImage.a.Equals(0.0f) == false) //[0.0.2] we don't need this anymore but don't delete until the final release. 2018.06.20 John
                 {
                     if (x < minX)
                     {
@@ -686,6 +686,15 @@ public class AQScanner : MonoBehaviour
                 }
             }
         }
+
+
+        // [0.0.2] Now we need fixed area for cropping fish image. 2018.06.20 John
+
+        minX = 515;
+        minY = 193;
+
+        maxX = 1501;
+        maxY = 893;
 
         finalImage = null;
 
