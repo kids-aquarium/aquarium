@@ -30,6 +30,7 @@
 				float2 uv : TEXCOORD0;
 				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
+				float4 world : TEXCOORD2;
 			};
 
 			sampler2D _MainTex;
@@ -51,6 +52,7 @@
 			{
 				f_in o;
 				o.vertex = UnityObjectToClipPos(i.vertex);
+				o.world = mul(unity_ObjectToWorld, i.vertex);
 				o.uv = TRANSFORM_TEX(i.uv, _MainTex);
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
@@ -61,8 +63,10 @@
 				fixed4 col = tex2D(_MainTex, i.uv);
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				float caustics = 0;
+				float causticsX = i.world.x / 100.0f;
+				float causticsY = i.world.z / 100.0f;
 				for(int octave = 1; octave <= OCTAVES; octave++) {
-					caustics += (cnoise(float3(_CausticsScale * octave * i.uv.x, _CausticsScale * octave * i.uv.y, _CausticsSpeed * _Time.y)) / octave);
+					caustics += (cnoise(float3(_CausticsScale * octave * causticsX, _CausticsScale * octave * causticsY, _CausticsSpeed * _Time.y)) / octave);
 				}
 
 				caustics = abs(caustics);
