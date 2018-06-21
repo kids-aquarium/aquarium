@@ -55,7 +55,7 @@
 				f_in o;
 				o.vertex = UnityObjectToClipPos(i.vertex);
 				o.world = mul(unity_ObjectToWorld, i.vertex);
-				o.worldNormal = normalize(mul(unity_ObjectToWorld, i.normal));
+				o.worldNormal = UnityObjectToWorldNormal(i.normal);
 				o.uv = TRANSFORM_TEX(i.uv, _MainTex);
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
@@ -66,7 +66,7 @@
 				fixed4 col = tex2D(_MainTex, i.uv);
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				float caustics = 0;
-				float3 lightDirection = float3(0, 1, 0);
+				float3 lightDirection = _WorldSpaceLightPos0.xyz;
 				float causticsX = i.world.x / 100.0f;
 				float causticsY = i.world.z / 100.0f;
 				for(int octave = 1; octave <= OCTAVES; octave++) {
@@ -85,7 +85,7 @@
 				else caustics = 0.0;
 
 				caustics *= _CausticsIntensity;
-				float ldn = saturate(dot(lightDirection, i.worldNormal));
+				float ldn = saturate(dot(i.worldNormal, lightDirection));
 				caustics *= ldn;
 				return col + caustics;
 			}
