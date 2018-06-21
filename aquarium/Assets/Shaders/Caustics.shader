@@ -7,6 +7,8 @@
 		_CausticsFeather("Caustics feather width", Range(0, 0.5)) = 0.1
 		_CausticsSpeed("Caustics speed", Float) = 0.5
 		_CausticsScale("Caustics scale", Float) = 1.0
+		_AmbientIntensity("Ambient intensity", Range(0, 1)) = 1.0
+		_DiffuseIntensity("Diffuse intensity", Range(0, 1)) = 1.0
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -19,17 +21,21 @@
 			#pragma multi_compile_fog
 
 			#include "UnityCG.cginc"
+			#include "Lighting.cginc"
 			#include "../Noise Shader/HLSL/ClassicNoise3D.hlsl"
 
 			struct v_in {
 				float4 vertex : POSITION;
 				float2 uv : TEXCOORD0;
+				float3 normal : NORMAL;
 			};
 
 			struct f_in {
 				float2 uv : TEXCOORD0;
 				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
+				float4 world : TEXCOORD2;
+				float3 worldNormal: TEXCOORD3;
 			};
 
 			sampler2D _MainTex;
@@ -40,6 +46,8 @@
 			float _CausticsFeather;
 			float _CausticsSpeed;
 			float _CausticsScale;
+			float _AmbientIntensity;
+			float _DiffuseIntensity;
 			static const int OCTAVES = 5;
 
 			float map(float x0, float y0, float x1, float y1, float v)
@@ -51,6 +59,8 @@
 			{
 				f_in o;
 				o.vertex = UnityObjectToClipPos(i.vertex);
+				o.world = mul(unity_ObjectToWorld, i.vertex);
+				o.worldNormal = UnityObjectToWorldNormal(i.normal);
 				o.uv = TRANSFORM_TEX(i.uv, _MainTex);
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
@@ -61,8 +71,11 @@
 				fixed4 col = tex2D(_MainTex, i.uv);
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				float caustics = 0;
+				float3 lightDirection = _WorldSpaceLightPos0.xyz;
+				float causticsX = i.world.x / 100.0f;
+				float causticsY = i.world.z / 100.0f;
 				for(int octave = 1; octave <= OCTAVES; octave++) {
-					caustics += (cnoise(float3(_CausticsScale * octave * i.uv.x, _CausticsScale * octave * i.uv.y, _CausticsSpeed * _Time.y)) / octave);
+					caustics += (cnoise(float3(_CausticsScale * octave * causticsX, _CausticsScale * octave * causticsY, _CausticsSpeed * _Time.y)) / octave);
 				}
 
 				caustics = abs(caustics);
@@ -77,8 +90,13 @@
 				else caustics = 0.0;
 
 				caustics *= _CausticsIntensity;
+				float ldn = saturate(dot(i.worldNormal, lightDirection));
+				caustics *= ldn;
 
-				return col + caustics;
+				float4 diffuse = _DiffuseIntensity * _LightColor0 * ldn;
+
+				float4 ambient = _AmbientIntensity * float4(UNITY_LIGHTMODEL_AMBIENT.rgb * col.rgb, 1);
+				return col * diffuse + ambient + caustics;
 			}
 			ENDCG
 		}

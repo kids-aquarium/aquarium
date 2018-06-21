@@ -60,6 +60,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AlphaClip: 0
+    - _AmbientIntensity: 0.44
     - _Blend: 0
     - _BumpScale: 1
     - _CausticsFeather: 0.05
@@ -70,10 +71,12 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DiffuseIntensity: 0.59
     - _DstBlend: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _IncidenceAttenuation: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
