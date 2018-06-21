@@ -19,6 +19,7 @@
 			#pragma multi_compile_fog
 
 			#include "UnityCG.cginc"
+			#include "Lighting.cginc"
 			#include "../Noise Shader/HLSL/ClassicNoise3D.hlsl"
 
 			struct v_in {
@@ -87,7 +88,9 @@
 				caustics *= _CausticsIntensity;
 				float ldn = saturate(dot(i.worldNormal, lightDirection));
 				caustics *= ldn;
-				return col + caustics;
+
+				float4 diffuse = _LightColor0 * ldn;
+				return col * diffuse + caustics;
 			}
 			ENDCG
 		}
