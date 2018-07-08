@@ -86,4 +86,5 @@ public class InstantFish : MonoBehaviour {
 
         streamFishReady = true; // tell mainthread to read png file
     }
+
 }

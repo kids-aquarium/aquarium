@@ -340,7 +340,7 @@ public class FlockingFish : MonoBehaviour {
 		List<GameObject> fishes = GetComponentInParent<FishFlocker>().getAllFish();
 		int numberOfAffectingFishes = 0;
 		foreach (GameObject other in fishes) {
-			if (this != other) {
+			if ((this != other) && (this.GetComponent<FlockingParameters>().breed == other.GetComponent<FlockingParameters>().breed)) { //cohesion only with same breed
 				Rigidbody otherRb = other.GetComponent<Rigidbody> ();
 				float distance = Vector3.Distance (rb.position, otherRb.position);
 				if (distance < parameters.cohesionDistance && distance > 0) {
@@ -361,7 +361,7 @@ public class FlockingFish : MonoBehaviour {
 		List<GameObject> fishes = GetComponentInParent<FishFlocker>().getAllFish();
 		int numberOfAffectingFishes = 0;
 		foreach (GameObject other in fishes) {
-			if (this != other) {
+			if ((this != other) && (this.GetComponent<FlockingParameters>().breed == other.GetComponent<FlockingParameters>().breed)) { //Only align with same breed
 				Rigidbody otherRb = other.GetComponent<Rigidbody> ();
 				float distance = Vector3.Distance (rb.position, otherRb.position);
 				if (distance < parameters.alignmentDistance && distance > 0) {
