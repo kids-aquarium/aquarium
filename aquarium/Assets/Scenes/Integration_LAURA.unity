@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44590086, g: 0.4956373, b: 0.5743793, a: 1}
+  m_IndirectSpecularColor: {r: 0.44588584, g: 0.49562097, b: 0.5743684, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -90,7 +90,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -34167,6 +34167,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 1295541271461026, guid: d52387a637049411c87b9854c5676409, type: 2}
+  fishPrefabs:
+  - {fileID: 1101039208696444, guid: a3662f59b05414770b7286e7c0bcd5f6, type: 2}
+  - {fileID: 1691660147046600, guid: b09b6a36004dd498695771d9f6fac561, type: 2}
+  - {fileID: 1317103418997448, guid: f41c8fa2f495f4c8b81ded0f5f241429, type: 2}
+  - {fileID: 1455899526080300, guid: 702936708ad00412f820a346a56f7bb2, type: 2}
+  - {fileID: 1462961863534202, guid: ed14db5b5515e44278431433cbe4999e, type: 2}
+  - {fileID: 1878479563094776, guid: af6ffa93f8a004f12b304a81c788063e, type: 2}
+  - {fileID: 1539892866007412, guid: 0de1ea152e20d42c0973618b798acd71, type: 2}
+  - {fileID: 1170562045728938, guid: 6a038414b986b44d780accce2bb11d56, type: 2}
+  - {fileID: 1205677297034390, guid: 5e87b528df5474dd0a1a97e2773fd6f2, type: 2}
+  - {fileID: 1754506424453732, guid: df46a01b3d46d4f748aea555e1c2602d, type: 2}
   instantiationRadius: 50
 --- !u!114 &2115303561
 MonoBehaviour:

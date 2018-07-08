@@ -10,6 +10,7 @@ public class InstantFish : MonoBehaviour {
     private bool streamFishReady;
 
 	public GameObject prefab;
+	public GameObject[] fishPrefabs = new GameObject[10];
 	public float instantiationRadius = 10.0f;
 
 	// Use this for initialization
@@ -55,11 +56,11 @@ public class InstantFish : MonoBehaviour {
 		newFish.transform.parent = this.transform;
 	}
 
-	public void InstantFishWithTexture2D(Texture2D tex){
+	public void InstantFishWithTexture2D(int fishID, Texture2D tex){
 		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
 		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
 		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Random.insideUnitSphere);
-		GameObject newFish = Instantiate(prefab, transform.position + positionOffset, transform.rotation * rotationOffset);
+		GameObject newFish = Instantiate(fishPrefabs[fishID], transform.position + positionOffset, transform.rotation * rotationOffset);
 		newFish.GetComponent<setMaterial>().LoadTexture2D(tex);
 		newFish.transform.parent = this.transform;
 	}
