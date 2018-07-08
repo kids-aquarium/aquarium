@@ -61,7 +61,7 @@ public class InstantFish : MonoBehaviour {
 		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Random.insideUnitSphere);
 		GameObject newFish = Instantiate(fishPrefabs[fishID], transform.position + positionOffset, transform.rotation * rotationOffset);
 		newFish.GetComponent<setMaterial>().LoadTexture2D(tex);
-		newFish.GetComponent<FlockingParameters>().breed = fishID;
+		newFish.GetComponent<FlockingFish>().SetBreed(fishID);
 		newFish.transform.parent = this.transform;
 	}
 
