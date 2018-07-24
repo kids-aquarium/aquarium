@@ -90,7 +90,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -34191,7 +34191,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters:
-    breed: 0
     minSpeed: 1
     maxSpeed: 10
     desiredSeparation: 15
@@ -34207,7 +34206,7 @@ MonoBehaviour:
     minimumZ: -30
     maximumZ: 70
     debugDrawings: 1
-  passParametersToFlock: 0
+  passParametersToFlock: 1
   fishScale: 0
   minimumPopulation: 10
   maximumPopulation: 30
