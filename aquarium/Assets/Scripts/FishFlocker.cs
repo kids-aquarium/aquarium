@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct populationIndex{
+	public int minPopulation;
+	public int maxPopulation;
+};
+
 public class FishFlocker : MonoBehaviour {
 
 	public FlockingParameters parameters;
@@ -12,18 +17,28 @@ public class FishFlocker : MonoBehaviour {
 	[Range(0, 5000)] // NB: need to match above
 	public float fishScale = 1;
 
+	/* 
 	[Range(1, 50)] //NB: What's a good value here?
 	public int minimumPopulation = 10;
 
 	[Range(1, 500)] // NB: Maximum value should be more than the max of minimumPopulation. Also, good value?
 	public int maximumPopulation = 30;
 
+	*/
+
 	[Range(10, 10000)] //NB: What's a good value here? For the record, 24 hours is 86400 seconds.
 	public float oldAge = 10000; // seconds
+
+	public populationIndex[] populationIndexes = new populationIndex[10];
 
 	void Start () {
 		//generateSeekPosition();
 		LoadPreferences();
+
+		for(int i = 0; i<populationIndexes.Length; i++){
+			populationIndexes[i].minPopulation = 2;
+			populationIndexes[i].maxPopulation = 3;
+		}
 	}
 
 	void Update () {
@@ -43,30 +58,74 @@ public class FishFlocker : MonoBehaviour {
 		if (fishScale > minScale && Input.GetKey("down")) fishScale -= 1f;
 
 		List<GameObject> allFish = getAllFish();
-		List<GameObject> aliveFish = new List<GameObject>();
+
+		//Unique list for each breed.
+		List<GameObject>[] fishByBreed = new List<GameObject>[10];
+
+		for(int i = 0; i < fishByBreed.Length; i++){
+			fishByBreed[i] = new List<GameObject>();
+		}
+		
+		//This will hold all the alive populations for each breed.
+		int[] fishCountByBreed = new int[10];
+
+		for(int i = 0; i<fishCountByBreed.Length; i++){ fishCountByBreed[i] = -1;} //Setting a temp value for now, seems to give some bugs otherwise once in a while.
+
+		// List<GameObject> aliveFish = new List<GameObject>();
 
 		foreach(GameObject fish in allFish){
 			if(fish.GetComponent<FlockingFish>().dying == false){
-				aliveFish.Add(fish.gameObject);
+				int index = fish.GetComponent<FlockingFish>().GetBreed();
+				fishByBreed[index].Add(fish.gameObject);
 			}
 		}
 
-		int realFishCount = aliveFish.Count;
+		for(int i = 0; i<fishByBreed.Length; i++){
+			fishCountByBreed[i] = fishByBreed[i].Count;
+			Debug.Log("Number of fishes for breed " + i + " is: " + fishCountByBreed[i]);
+		}
 
-		if(realFishCount > minimumPopulation) {
-			GameObject oldestFish = findOldest(aliveFish);
+		//Go through each now. Sigh. I hate array of arrays. :|
 
-			if(oldestFish != null){
-				if((oldestFish.GetComponent<FlockingFish>().age) > oldAge){
-					oldestFish.GetComponent<FlockingFish>().dying = true;
+		for(int i = 0; i<fishCountByBreed.Length; i++){
+			if(fishCountByBreed[i] > populationIndexes[i].minPopulation){
+				GameObject oldestFish = findOldest(fishByBreed[i]);
+
+				if(oldestFish != null){
+					if(oldestFish.GetComponent<FlockingFish>().age > oldAge){
+						oldestFish.GetComponent<FlockingFish>().dying = true;
+					}
 				}
+			}
 
+			if(fishCountByBreed[i] > populationIndexes[i].maxPopulation){
+				GameObject oldestFish = findOldest(fishByBreed[i]);
+				if(oldestFish != null) {oldestFish.GetComponent<FlockingFish>().dying = true;}
 			}
 		}
-		if(realFishCount > maximumPopulation){
-			GameObject oldestFish = findOldest(aliveFish);
-			if(oldestFish != null) { oldestFish.GetComponent<FlockingFish>().dying = true; }
-		}
+
+		// foreach(GameObject fish in allFish){
+		// 	if(fish.GetComponent<FlockingFish>().dying == false){
+		// 		aliveFish.Add(fish.gameObject);
+		// 	}
+		// }
+
+		// int realFishCount = aliveFish.Count;
+
+		// if(realFishCount > minimumPopulation) {
+		// 	GameObject oldestFish = findOldest(aliveFish);
+
+		// 	if(oldestFish != null){
+		// 		if((oldestFish.GetComponent<FlockingFish>().age) > oldAge){
+		// 			oldestFish.GetComponent<FlockingFish>().dying = true;
+		// 		}
+
+		// 	}
+		// }
+		// if(realFishCount > maximumPopulation){
+		// 	GameObject oldestFish = findOldest(aliveFish);
+		// 	if(oldestFish != null) { oldestFish.GetComponent<FlockingFish>().dying = true; }
+		// }
 	}
 
 	GameObject findOldest(List<GameObject> fishes){
@@ -105,8 +164,8 @@ public class FishFlocker : MonoBehaviour {
 		PlayerPrefs.SetFloat("fishScale", fishScale);
 		PlayerPrefs.SetFloat("fishMinimumSpeed", parameters.minSpeed);
 		PlayerPrefs.SetFloat("fishMaximumSpeed", parameters.maxSpeed);
-		PlayerPrefs.SetInt  ("minimumPopulation", minimumPopulation);
-		PlayerPrefs.SetInt  ("maximumPopulation", maximumPopulation);
+		//PlayerPrefs.SetInt  ("minimumPopulation", minimumPopulation);
+		//PlayerPrefs.SetInt  ("maximumPopulation", maximumPopulation);
 		PlayerPrefs.SetFloat("oldAge", oldAge);
 	}
 
@@ -114,8 +173,8 @@ public class FishFlocker : MonoBehaviour {
 		fishScale = PlayerPrefs.GetFloat("fishScale");
 		parameters.minSpeed = PlayerPrefs.GetFloat("fishMinimumSpeed");
 		parameters.maxSpeed = PlayerPrefs.GetFloat("fishMaximumSpeed");
-		minimumPopulation = PlayerPrefs.GetInt("minimumPopulation");
-		maximumPopulation = PlayerPrefs.GetInt("maximumPopulation");
+		//minimumPopulation = PlayerPrefs.GetInt("minimumPopulation");
+		//maximumPopulation = PlayerPrefs.GetInt("maximumPopulation");
 		oldAge = PlayerPrefs.GetFloat("oldAge");
 	}
 
@@ -135,13 +194,13 @@ public class FishFlocker : MonoBehaviour {
 		parameters.maxSpeed = maxSpeed;
 	}
 
-	public void SetMinimumPopulation(float minimumPopulation) {
-		this.minimumPopulation = Mathf.RoundToInt(minimumPopulation);
-	}
+	// public void SetMinimumPopulation(float minimumPopulation) {
+	// 	this.minimumPopulation = Mathf.RoundToInt(minimumPopulation);
+	// }
 
-	public void SetMaximumPopulation(float maximumPopulation) {
-		this.maximumPopulation = Mathf.RoundToInt(maximumPopulation);
-	}
+	// public void SetMaximumPopulation(float maximumPopulation) {
+	// 	this.maximumPopulation = Mathf.RoundToInt(maximumPopulation);
+	// }
 
 	public void SetOldAge(float oldAge) {
 		this.oldAge = oldAge;
