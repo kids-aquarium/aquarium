@@ -71,7 +71,6 @@ public class FishFlocker : MonoBehaviour {
 
 		for(int i = 0; i<fishCountByBreed.Length; i++){ fishCountByBreed[i] = -1;} //Setting a temp value for now, seems to give some bugs otherwise once in a while.
 
-		// List<GameObject> aliveFish = new List<GameObject>();
 
 		foreach(GameObject fish in allFish){
 			if(fish.GetComponent<FlockingFish>().dying == false){
@@ -82,7 +81,7 @@ public class FishFlocker : MonoBehaviour {
 
 		for(int i = 0; i<fishByBreed.Length; i++){
 			fishCountByBreed[i] = fishByBreed[i].Count;
-			Debug.Log("Number of fishes for breed " + i + " is: " + fishCountByBreed[i]);
+			// Debug.Log("Number of fishes for breed " + i + " is: " + fishCountByBreed[i]);
 		}
 
 		//Go through each now. Sigh. I hate array of arrays. :|
@@ -103,29 +102,7 @@ public class FishFlocker : MonoBehaviour {
 				if(oldestFish != null) {oldestFish.GetComponent<FlockingFish>().dying = true;}
 			}
 		}
-
-		// foreach(GameObject fish in allFish){
-		// 	if(fish.GetComponent<FlockingFish>().dying == false){
-		// 		aliveFish.Add(fish.gameObject);
-		// 	}
-		// }
-
-		// int realFishCount = aliveFish.Count;
-
-		// if(realFishCount > minimumPopulation) {
-		// 	GameObject oldestFish = findOldest(aliveFish);
-
-		// 	if(oldestFish != null){
-		// 		if((oldestFish.GetComponent<FlockingFish>().age) > oldAge){
-		// 			oldestFish.GetComponent<FlockingFish>().dying = true;
-		// 		}
-
-		// 	}
-		// }
-		// if(realFishCount > maximumPopulation){
-		// 	GameObject oldestFish = findOldest(aliveFish);
-		// 	if(oldestFish != null) { oldestFish.GetComponent<FlockingFish>().dying = true; }
-		// }
+		
 	}
 
 	GameObject findOldest(List<GameObject> fishes){
