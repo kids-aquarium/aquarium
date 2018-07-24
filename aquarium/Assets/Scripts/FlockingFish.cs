@@ -319,7 +319,7 @@ public class FlockingFish : MonoBehaviour {
 		List<GameObject> fishes = GetComponentInParent<FishFlocker> ().getAllFish ();
 		int numberOfAffectingFishes = 0;
 		foreach (GameObject other in fishes) {
-			if (this != other) {
+			if (this != other) {	//separates from every breed, so no && to check others breed here.
 				Rigidbody otherRb = other.GetComponent<Rigidbody> ();
 				float distance = Vector3.Distance (rb.position, otherRb.position);
 				if (distance < parameters.desiredSeparation && distance > 0) {
