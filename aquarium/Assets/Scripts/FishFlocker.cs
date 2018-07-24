@@ -35,9 +35,12 @@ public class FishFlocker : MonoBehaviour {
 		//generateSeekPosition();
 		LoadPreferences();
 
+
+		//NOTE: THIS NEEDS TO BE EXPOSED TO THE MENU SYSTEM? 
+		//ALSO WHAT ARE GOOD RANGES?
 		for(int i = 0; i<populationIndexes.Length; i++){
 			populationIndexes[i].minPopulation = 2;
-			populationIndexes[i].maxPopulation = 3;
+			populationIndexes[i].maxPopulation = 10;
 		}
 	}
 
