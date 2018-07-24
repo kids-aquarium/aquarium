@@ -17,15 +17,6 @@ public class FishFlocker : MonoBehaviour {
 	[Range(0, 5000)] // NB: need to match above
 	public float fishScale = 1;
 
-	/* 
-	[Range(1, 50)] //NB: What's a good value here?
-	public int minimumPopulation = 10;
-
-	[Range(1, 500)] // NB: Maximum value should be more than the max of minimumPopulation. Also, good value?
-	public int maximumPopulation = 30;
-
-	*/
-
 	[Range(10, 10000)] //NB: What's a good value here? For the record, 24 hours is 86400 seconds.
 	public float oldAge = 10000; // seconds
 
@@ -34,7 +25,6 @@ public class FishFlocker : MonoBehaviour {
 	void Start () {
 		//generateSeekPosition();
 		LoadPreferences();
-
 
 		//NOTE: THIS NEEDS TO BE EXPOSED TO THE MENU SYSTEM? 
 		//ALSO WHAT ARE GOOD RANGES?
