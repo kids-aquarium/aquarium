@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4708781713280718}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,7 +34,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4898626537041848}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4708560343931042}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,7 +65,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4293877973585746}
   - component: {fileID: 137339481660729740}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 114229150172130900}
   - component: {fileID: 54883658872340534}
   - component: {fileID: 136629590416067448}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4721062784001454}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -235,16 +235,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters:
-    minSpeed: 13.9
-    maxSpeed: 16.46
-    desiredSeparation: 6
+    minSpeed: 16
+    maxSpeed: 18
+    desiredSeparation: 16
     separationWeight: 3
-    alignmentDistance: 40
+    alignmentDistance: 80
     alignmentWeight: 2
-    cohesionDistance: 80
+    cohesionDistance: 240
     cohesionWeight: 1
     destination: {x: 0, y: 0, z: 0}
-    destinationWeight: 1
+    destinationWeight: 0
     useFrustumForBounds: 1
     useCurrentY: 0
     minimumZ: -30
@@ -283,7 +283,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1878479563094776}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.005
   m_Height: 0.02

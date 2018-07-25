@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public struct populationIndex{
 	public int minPopulation;
 	public int maxPopulation;
@@ -25,13 +26,6 @@ public class FishFlocker : MonoBehaviour {
 	void Start () {
 		//generateSeekPosition();
 		LoadPreferences();
-
-		//NOTE: THIS NEEDS TO BE EXPOSED TO THE MENU SYSTEM? 
-		//ALSO WHAT ARE GOOD RANGES?
-		for(int i = 0; i<populationIndexes.Length; i++){
-			populationIndexes[i].minPopulation = 2;
-			populationIndexes[i].maxPopulation = 10;
-		}
 	}
 
 	void Update () {
@@ -58,7 +52,7 @@ public class FishFlocker : MonoBehaviour {
 		for(int i = 0; i < fishByBreed.Length; i++){
 			fishByBreed[i] = new List<GameObject>();
 		}
-		
+
 		//This will hold all the alive populations for each breed.
 		int[] fishCountByBreed = new int[10];
 
@@ -95,12 +89,12 @@ public class FishFlocker : MonoBehaviour {
 				if(oldestFish != null) {oldestFish.GetComponent<FlockingFish>().dying = true;}
 			}
 		}
-		
+
 	}
 
 	GameObject findOldest(List<GameObject> fishes){
 		float oldestAge = 0;
-		
+
 		GameObject oldestFish = null;
 
 		foreach(GameObject fish in fishes){

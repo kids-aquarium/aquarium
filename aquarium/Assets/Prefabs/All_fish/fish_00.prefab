@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4274620960569412}
   - component: {fileID: 137328862926614780}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 114499582348557202}
   - component: {fileID: 54680727877079756}
   - component: {fileID: 136973315088850248}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4684790709469310}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4597164453627032}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4614841167353146}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4293050888478274}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,16 +246,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters:
-    minSpeed: 5
-    maxSpeed: 6.92
-    desiredSeparation: 4
+    minSpeed: 8
+    maxSpeed: 10
+    desiredSeparation: 10
     separationWeight: 3
     alignmentDistance: 20
-    alignmentWeight: 1
+    alignmentWeight: 0.5
     cohesionDistance: 120
     cohesionWeight: 2
-    destination: {x: 0, y: 30, z: 0}
-    destinationWeight: 1
+    destination: {x: 0, y: 25, z: 0}
+    destinationWeight: 0.5
     useFrustumForBounds: 1
     useCurrentY: 0
     minimumZ: -30
@@ -283,7 +283,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1101039208696444}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.005
   m_Height: 0.02

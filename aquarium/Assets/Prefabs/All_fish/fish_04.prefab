@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4061435124141654}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,7 +34,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4918546215604814}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4795631434174904}
   - component: {fileID: 137521158142660126}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 114873204131947402}
   - component: {fileID: 54760230864215956}
   - component: {fileID: 136526428141176408}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4743408668464132}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4314313697444194}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +197,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1462961863534202}
   serializedVersion: 2
-  m_Mass: 0.18
+  m_Mass: 0.5
   m_Drag: 0
   m_AngularDrag: 0.025
   m_UseGravity: 0
@@ -248,14 +248,14 @@ MonoBehaviour:
   parameters:
     minSpeed: 5.16
     maxSpeed: 7.38
-    desiredSeparation: 5
+    desiredSeparation: 12
     separationWeight: 3
-    alignmentDistance: 20
+    alignmentDistance: 30
     alignmentWeight: 2
     cohesionDistance: 80
     cohesionWeight: 1
     destination: {x: 0, y: -20, z: 0}
-    destinationWeight: 1
+    destinationWeight: 0.5
     useFrustumForBounds: 1
     useCurrentY: 0
     minimumZ: -30
@@ -283,7 +283,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1462961863534202}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.005
   m_Height: 0.02

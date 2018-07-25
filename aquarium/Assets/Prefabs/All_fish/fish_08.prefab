@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4609174437819210}
   - component: {fileID: 137570821416173390}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,7 +35,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4300246012238306}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 114719860904981232}
   - component: {fileID: 54511781642900228}
   - component: {fileID: 136094802611873888}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4903948271764666}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4238611887632620}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4587056058064726}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +197,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1205677297034390}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.025
   m_UseGravity: 0
@@ -248,13 +248,13 @@ MonoBehaviour:
   parameters:
     minSpeed: 3
     maxSpeed: 4
-    desiredSeparation: 20
+    desiredSeparation: 40
     separationWeight: 6
     alignmentDistance: 40
     alignmentWeight: 1
     cohesionDistance: 120
     cohesionWeight: 2
-    destination: {x: 0, y: -35, z: 0}
+    destination: {x: 0, y: -30, z: 0}
     destinationWeight: 1
     useFrustumForBounds: 1
     useCurrentY: 0
@@ -283,7 +283,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1205677297034390}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.005
   m_Height: 0.02

@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4711683077321454}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 114641096948510356}
   - component: {fileID: 54370568234974078}
   - component: {fileID: 136955419858663262}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_07
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4986793195282682}
   - component: {fileID: 137567366386885634}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4744331257225118}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4311367649054106}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4291065714156402}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,14 +248,14 @@ MonoBehaviour:
   parameters:
     minSpeed: 10.31
     maxSpeed: 16.28
-    desiredSeparation: 6
+    desiredSeparation: 20
     separationWeight: 3
-    alignmentDistance: 14.9
+    alignmentDistance: 35
     alignmentWeight: 2
-    cohesionDistance: 80
+    cohesionDistance: 35
     cohesionWeight: 1
-    destination: {x: 0, y: 0, z: 0}
-    destinationWeight: 1
+    destination: {x: 0, y: -5, z: 0}
+    destinationWeight: 0.25
     useFrustumForBounds: 1
     useCurrentY: 0
     minimumZ: -30
@@ -283,7 +283,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1170562045728938}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.005
   m_Height: 0.02

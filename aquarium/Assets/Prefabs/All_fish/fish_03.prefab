@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4568502663492962}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,7 +34,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4061547107714442}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4192927207050434}
   - component: {fileID: 137709144933235220}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 114601484673330298}
   - component: {fileID: 54179958284362094}
   - component: {fileID: 136714705961807348}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: fish_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4162278538948586}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4550808259064000}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,13 +248,13 @@ MonoBehaviour:
   parameters:
     minSpeed: 5
     maxSpeed: 8
-    desiredSeparation: 6
+    desiredSeparation: 20
     separationWeight: 2
-    alignmentDistance: 20
+    alignmentDistance: 40
     alignmentWeight: 3
-    cohesionDistance: 80
+    cohesionDistance: 120
     cohesionWeight: 1
-    destination: {x: 0, y: 20, z: 0}
+    destination: {x: 0, y: 15, z: 5}
     destinationWeight: 1
     useFrustumForBounds: 1
     useCurrentY: 0
@@ -283,7 +283,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1455899526080300}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.005
   m_Height: 0.02

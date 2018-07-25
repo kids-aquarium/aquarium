@@ -209,7 +209,7 @@ public class FlockingFish : MonoBehaviour {
 
 			Vector3 destinationHeading = destination - transform.position;
 			destinationHeading.Normalize ();
-			targetHeading += destinationHeading * parameters.destinationWeight;
+			targetHeading += destinationHeading; // * parameters.destinationWeight; // Always seek to deathbed at weight of 1
 
 			targetHeading.Normalize();
 
