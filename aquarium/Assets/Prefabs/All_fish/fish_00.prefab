@@ -260,7 +260,7 @@ MonoBehaviour:
     destinationWeight: 0.5
     useFrustumForBounds: 1
     useCurrentY: 0
-    minimumZ: -30
+    minimumZ: -60
     maximumZ: 70
     debugDrawings: 1
   age: 0

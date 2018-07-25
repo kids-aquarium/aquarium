@@ -248,19 +248,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters:
-    minSpeed: 2.07
-    maxSpeed: 4.1
-    desiredSeparation: 16
-    separationWeight: 3
-    alignmentDistance: 32
-    alignmentWeight: 2
+    minSpeed: 3
+    maxSpeed: 4
+    desiredSeparation: 18
+    separationWeight: 1.6
+    alignmentDistance: 24
+    alignmentWeight: 3
     cohesionDistance: 80
-    cohesionWeight: 1
+    cohesionWeight: 1.4
     destination: {x: 0, y: 0, z: 0}
-    destinationWeight: 0
+    destinationWeight: 0.25
     useFrustumForBounds: 1
     useCurrentY: 0
-    minimumZ: -30
+    minimumZ: -60
     maximumZ: 70
     debugDrawings: 1
   age: 0

@@ -240,16 +240,16 @@ MonoBehaviour:
     minSpeed: 16
     maxSpeed: 18
     desiredSeparation: 16
-    separationWeight: 3
+    separationWeight: 2
     alignmentDistance: 32
-    alignmentWeight: 2
+    alignmentWeight: 3
     cohesionDistance: 240
     cohesionWeight: 1
     destination: {x: 0, y: 0, z: 0}
-    destinationWeight: 0
+    destinationWeight: 0.125
     useFrustumForBounds: 1
     useCurrentY: 0
-    minimumZ: -30
+    minimumZ: -60
     maximumZ: 70
     debugDrawings: 1
   age: 0

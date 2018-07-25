@@ -257,10 +257,10 @@ MonoBehaviour:
     cohesionDistance: 160
     cohesionWeight: 1
     destination: {x: 0, y: 0, z: 0}
-    destinationWeight: 1
+    destinationWeight: 0.75
     useFrustumForBounds: 1
     useCurrentY: 0
-    minimumZ: -30
+    minimumZ: -60
     maximumZ: 70
     debugDrawings: 1
   age: 0

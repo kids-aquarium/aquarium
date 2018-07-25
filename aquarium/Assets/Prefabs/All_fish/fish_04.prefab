@@ -253,14 +253,14 @@ MonoBehaviour:
     desiredSeparation: 12
     separationWeight: 3
     alignmentDistance: 30
-    alignmentWeight: 1.25
+    alignmentWeight: 1.4
     cohesionDistance: 80
-    cohesionWeight: 1.75
+    cohesionWeight: 1.6
     destination: {x: 0, y: -20, z: 0}
     destinationWeight: 0.5
     useFrustumForBounds: 1
     useCurrentY: 0
-    minimumZ: -30
+    minimumZ: -60
     maximumZ: 70
     debugDrawings: 1
   age: 0
