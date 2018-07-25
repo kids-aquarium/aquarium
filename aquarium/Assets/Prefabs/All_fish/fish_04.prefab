@@ -251,9 +251,9 @@ MonoBehaviour:
     desiredSeparation: 12
     separationWeight: 3
     alignmentDistance: 30
-    alignmentWeight: 2
+    alignmentWeight: 1.25
     cohesionDistance: 80
-    cohesionWeight: 1
+    cohesionWeight: 1.75
     destination: {x: 0, y: -20, z: 0}
     destinationWeight: 0.5
     useFrustumForBounds: 1

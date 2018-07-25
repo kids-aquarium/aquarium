@@ -250,10 +250,10 @@ MonoBehaviour:
     maxSpeed: 10
     desiredSeparation: 10
     separationWeight: 3
-    alignmentDistance: 20
-    alignmentWeight: 0.5
+    alignmentDistance: 25
+    alignmentWeight: 1.5
     cohesionDistance: 120
-    cohesionWeight: 2
+    cohesionWeight: 1.5
     destination: {x: 0, y: 25, z: 0}
     destinationWeight: 0.5
     useFrustumForBounds: 1

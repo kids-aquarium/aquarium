@@ -248,10 +248,10 @@ MonoBehaviour:
   parameters:
     minSpeed: 5
     maxSpeed: 8
-    desiredSeparation: 20
-    separationWeight: 2
+    desiredSeparation: 15
+    separationWeight: 3
     alignmentDistance: 40
-    alignmentWeight: 3
+    alignmentWeight: 2
     cohesionDistance: 120
     cohesionWeight: 1
     destination: {x: 0, y: 15, z: 5}

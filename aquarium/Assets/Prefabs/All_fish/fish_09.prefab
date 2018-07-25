@@ -252,7 +252,7 @@ MonoBehaviour:
     separationWeight: 3
     alignmentDistance: 30
     alignmentWeight: 2
-    cohesionDistance: 80
+    cohesionDistance: 100
     cohesionWeight: 1
     destination: {x: 0, y: -10, z: 0}
     destinationWeight: 0.5

@@ -250,9 +250,9 @@ MonoBehaviour:
     maxSpeed: 16.28
     desiredSeparation: 20
     separationWeight: 3
-    alignmentDistance: 35
+    alignmentDistance: 50
     alignmentWeight: 2
-    cohesionDistance: 35
+    cohesionDistance: 80
     cohesionWeight: 1
     destination: {x: 0, y: -5, z: 0}
     destinationWeight: 0.25
