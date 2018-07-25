@@ -80,7 +80,7 @@ public class FlockingParameters {
 
 public class FlockingFish : MonoBehaviour {
 	public FlockingParameters parameters;
-	
+
 	//Variables for population control.
 	private float BirthTime;
 	public float age;
@@ -89,7 +89,7 @@ public class FlockingFish : MonoBehaviour {
 	//Breed
 	public int fishBreed = -1;
 
-	//NB: There might be a better way to set the deathbed. 
+	//NB: There might be a better way to set the deathbed.
 	Vector3 deathBed = new Vector3(100, 0, 50); //this is roughly out of screen (+ a bit more) towards the right
 												//in Start() there's a chance for it to flip to screen left.
 
@@ -101,7 +101,7 @@ public class FlockingFish : MonoBehaviour {
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
-		
+
 		BirthTime = Time.timeSinceLevelLoad;
 		dying = false;
 
@@ -203,7 +203,7 @@ public class FlockingFish : MonoBehaviour {
 
 			if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.yellow);
 			turnTowardsHeading(targetHeading);
-			
+
 			} else {
 			Vector3 destination = deathBed;
 
@@ -216,7 +216,7 @@ public class FlockingFish : MonoBehaviour {
 			turnTowardsHeading(targetHeading);
 
 			float distanceToDeathBed = Vector3.Distance(deathBed, transform.position);
-			
+
 			if(Mathf.Abs(distanceToDeathBed) < 15.0){
 				Destroy(gameObject);
 			}

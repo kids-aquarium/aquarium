@@ -197,9 +197,9 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1878479563094776}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 0.76
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0.025
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -235,24 +235,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters:
-    breed: 0
-    minSpeed: 1.22
-    maxSpeed: 4.7
-    desiredSeparation: 5
+    minSpeed: 13.9
+    maxSpeed: 16.46
+    desiredSeparation: 6
     separationWeight: 3
-    alignmentDistance: 20
+    alignmentDistance: 40
     alignmentWeight: 2
     cohesionDistance: 80
     cohesionWeight: 1
-    destination: {x: 0, y: 7.19, z: 0}
+    destination: {x: 0, y: 0, z: 0}
     destinationWeight: 1
     useFrustumForBounds: 1
     useCurrentY: 0
-    minimumZ: -5
-    maximumZ: 20
+    minimumZ: -30
+    maximumZ: 70
     debugDrawings: 1
   age: 0
   dying: 0
+  fishBreed: -1
   angularVelocityController:
     pFactor: 2
     iFactor: 0.00025
@@ -283,7 +283,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1878479563094776}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.005
   m_Height: 0.02
