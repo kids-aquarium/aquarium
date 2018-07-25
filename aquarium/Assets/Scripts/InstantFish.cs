@@ -10,6 +10,7 @@ public class InstantFish : MonoBehaviour {
     private bool streamFishReady;
 
 	public GameObject prefab;
+	public GameObject[] fishPrefabs = new GameObject[10];
 	public float instantiationRadius = 10.0f;
 
 	// Use this for initialization
@@ -23,20 +24,8 @@ public class InstantFish : MonoBehaviour {
 	// Update is called once per frame
 		void Update () {
 
-		if(Input.GetKeyUp("1")){
-			InstantFishWithTexture("fishTexTest001");
-		}
-
-		if(Input.GetKeyUp("2")){
-			InstantFishWithTexture("fishTexTest002");
-		}
-
-		if(Input.GetKeyUp("3")){
-			InstantFishWithTexture("fishTexTest003");
-		}
-
-		if(Input.GetKeyUp("4")){
-			InstantFishWithTexture("fishTexTest004");
+		if(Input.GetKeyUp(KeyCode.Space)){
+			InstantFishWithDefaultTexture(Random.Range(0, 10));
 		}
 
         if (streamFishReady == true)
@@ -46,21 +35,33 @@ public class InstantFish : MonoBehaviour {
 		
 	}
 
+	public void InstantFishWithDefaultTexture(int fishID){
+		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
+		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
+		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Random.insideUnitSphere);
+		GameObject newFish = Instantiate(fishPrefabs[fishID], transform.position + positionOffset, transform.rotation * rotationOffset);
+		// newFish.GetComponent<setMaterial>().LoadTexture(_textureName);
+		newFish.GetComponent<FlockingFish>().SetBreed(fishID);
+		newFish.transform.parent = this.transform;
+	}
+
 	public void InstantFishWithTexture(string _textureName){
 		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
 		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
 		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Random.insideUnitSphere);
 		GameObject newFish = Instantiate(prefab, transform.position + positionOffset, transform.rotation * rotationOffset);
 		newFish.GetComponent<setMaterial>().LoadTexture(_textureName);
+		newFish.GetComponent<FlockingFish>().SetBreed(3);
 		newFish.transform.parent = this.transform;
 	}
 
-	public void InstantFishWithTexture2D(Texture2D tex){
+	public void InstantFishWithTexture2D(int fishID, Texture2D tex){
 		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
 		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
 		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Random.insideUnitSphere);
-		GameObject newFish = Instantiate(prefab, transform.position + positionOffset, transform.rotation * rotationOffset);
+		GameObject newFish = Instantiate(fishPrefabs[fishID], transform.position + positionOffset, transform.rotation * rotationOffset);
 		newFish.GetComponent<setMaterial>().LoadTexture2D(tex);
+		newFish.GetComponent<FlockingFish>().SetBreed(fishID);
 		newFish.transform.parent = this.transform;
 	}
 
@@ -84,4 +85,5 @@ public class InstantFish : MonoBehaviour {
 
         streamFishReady = true; // tell mainthread to read png file
     }
+
 }
