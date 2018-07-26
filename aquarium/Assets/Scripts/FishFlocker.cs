@@ -18,8 +18,8 @@ public class FishFlocker : MonoBehaviour {
 	[Range(0, 5000)] // NB: need to match above
 	public float fishScale = 1;
 
-	[Range(10, 10000)] //NB: What's a good value here? For the record, 24 hours is 86400 seconds.
-	public float oldAge = 10000; // seconds
+	[Range(10, 2628000)] // up to a month
+	public float oldAge = 604800; // a week in seconds
 
 	public populationIndex[] populationIndexes = new populationIndex[10];
 
