@@ -51,7 +51,7 @@ enum SCANNER_MODE { SIMULATION, ACTIVE };
 
 
 [System.Serializable]
-public class AQScannerEvent : UnityEvent<Texture2D> {}
+public class AQScannerEvent : UnityEvent<int,Texture2D> {} // [0.0.3] add fishID for instantiation
 
 
 
@@ -807,7 +807,7 @@ public class AQScanner : MonoBehaviour
         
         finalFishTexture.Apply();
 
-        fishReadyEvent.Invoke(finalFishTexture);
+        fishReadyEvent.Invoke(fishID,finalFishTexture); // [0.0.3] pass fish ID as well. John. 2018.07.25
 
         // [001] we need to save the raw image from camera when we install this system for the first time.
         // because there is only way to make a fish mask with raw camera image.
