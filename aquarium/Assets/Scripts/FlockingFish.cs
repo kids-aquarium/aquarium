@@ -36,7 +36,7 @@ public class VectorPid
 
 [System.Serializable]
 public class FlockingParameters {
-	public int 	 breed             = 0;
+	//public int 	 breed             = 0;
 	[Header("Physical parameters")]
 	public float minSpeed          = 1.0f;
 	public float maxSpeed          = 10.0f;
@@ -80,13 +80,16 @@ public class FlockingParameters {
 
 public class FlockingFish : MonoBehaviour {
 	public FlockingParameters parameters;
-	
+
 	//Variables for population control.
 	private float BirthTime;
 	public float age;
 	public bool dying;
 
-	//NB: There might be a better way to set the deathbed. 
+	//Breed
+	public int fishBreed = -1;
+
+	//NB: There might be a better way to set the deathbed.
 	Vector3 deathBed = new Vector3(100, 0, 50); //this is roughly out of screen (+ a bit more) towards the right
 												//in Start() there's a chance for it to flip to screen left.
 
@@ -98,7 +101,7 @@ public class FlockingFish : MonoBehaviour {
 
 	void Start () {
 		rb = GetComponent<Rigidbody>();
-		
+
 		BirthTime = Time.timeSinceLevelLoad;
 		dying = false;
 
@@ -200,20 +203,20 @@ public class FlockingFish : MonoBehaviour {
 
 			if(parameters.debugDrawings) Debug.DrawRay(transform.position, targetHeading, Color.yellow);
 			turnTowardsHeading(targetHeading);
-			
+
 			} else {
 			Vector3 destination = deathBed;
 
 			Vector3 destinationHeading = destination - transform.position;
 			destinationHeading.Normalize ();
-			targetHeading += destinationHeading * parameters.destinationWeight;
+			targetHeading += destinationHeading; // * parameters.destinationWeight; // Always seek to deathbed at weight of 1
 
 			targetHeading.Normalize();
 
 			turnTowardsHeading(targetHeading);
 
 			float distanceToDeathBed = Vector3.Distance(deathBed, transform.position);
-			
+
 			if(Mathf.Abs(distanceToDeathBed) < 15.0){
 				Destroy(gameObject);
 			}
@@ -316,7 +319,7 @@ public class FlockingFish : MonoBehaviour {
 		List<GameObject> fishes = GetComponentInParent<FishFlocker> ().getAllFish ();
 		int numberOfAffectingFishes = 0;
 		foreach (GameObject other in fishes) {
-			if (this != other) {
+			if (this != other) {	//separates from every breed, so no && to check others breed here.
 				Rigidbody otherRb = other.GetComponent<Rigidbody> ();
 				float distance = Vector3.Distance (rb.position, otherRb.position);
 				if (distance < parameters.desiredSeparation && distance > 0) {
@@ -340,7 +343,7 @@ public class FlockingFish : MonoBehaviour {
 		List<GameObject> fishes = GetComponentInParent<FishFlocker>().getAllFish();
 		int numberOfAffectingFishes = 0;
 		foreach (GameObject other in fishes) {
-			if (this != other) {
+			if ((this != other) && (this.fishBreed == other.GetComponent<FlockingFish>().GetBreed()))  { //cohesion only with same breed
 				Rigidbody otherRb = other.GetComponent<Rigidbody> ();
 				float distance = Vector3.Distance (rb.position, otherRb.position);
 				if (distance < parameters.cohesionDistance && distance > 0) {
@@ -361,7 +364,7 @@ public class FlockingFish : MonoBehaviour {
 		List<GameObject> fishes = GetComponentInParent<FishFlocker>().getAllFish();
 		int numberOfAffectingFishes = 0;
 		foreach (GameObject other in fishes) {
-			if (this != other) {
+			if ((this != other) && (this.fishBreed == other.GetComponent<FlockingFish>().GetBreed())) { //Only align with same breed
 				Rigidbody otherRb = other.GetComponent<Rigidbody> ();
 				float distance = Vector3.Distance (rb.position, otherRb.position);
 				if (distance < parameters.alignmentDistance && distance > 0) {
@@ -380,5 +383,15 @@ public class FlockingFish : MonoBehaviour {
 
 	Vector3? Destination() {
 		return parameters.destination;
+	}
+
+	public void SetBreed(int _b){
+		fishBreed = _b;
+		Debug.Log("Breed set");
+		Debug.Log(fishBreed);
+	}
+
+	public int GetBreed(){
+		return fishBreed;
 	}
 }

@@ -8,6 +8,8 @@
 		_XSwayDepth("X Sway depth", Range(0, 1)) = 0.5
 		_ZSwayDepth("Z Sway depth", Range(0, 1)) = 0.5
 		_YOffset("Y offset (world coordinates)", float) = 0.5
+		_AmbientIntensity("Ambient intensity", Range(0, 5)) = 1.0
+		_DiffuseIntensity("Diffuse intensity", Range(0, 5)) = 1.0
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" "DisableBatching"="True" }
@@ -15,21 +17,25 @@
 		Pass {
 			Cull Off
 			CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment frag
+			#pragma vertex vert
+			#pragma fragment frag
 			#pragma multi_compile_fog
 			#pragma addshadow
 
 			#include "UnityCG.cginc"
+			#include "Lighting.cginc"
 
 			struct v_in {
 				float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+				float3 normal : NORMAL;
 			};
 
 			struct f_in {
 				float2 uv : TEXCOORD0;
+				//UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+				float3 worldNormal: TEXCOORD2;
 			};
 
 			sampler2D _MainTex;
@@ -41,11 +47,13 @@
 			float _XSwayDepth;
 			float _ZSwayDepth;
 			float _YOffset;
+			float _AmbientIntensity;
+			float _DiffuseIntensity;
 
-			f_in vert (v_in i)
-      {
-        f_in o;
+			f_in vert (v_in i) {
+				f_in o;
 				float3 wpos = mul(unity_ObjectToWorld, i.vertex.xyz);
+				o.worldNormal = UnityObjectToWorldNormal(i.normal);
 				float x = i.vertex.x;
 				float z = i.vertex.z;
 				if(wpos.y > _YOffset) {
@@ -57,16 +65,21 @@
 				o.vertex.x += x * _XSwayDepth;
 				o.vertex.y += z * _ZSwayDepth;
 				o.vertex = UnityObjectToClipPos(o.vertex);
-	      o.uv = TRANSFORM_TEX(i.uv, _MainTex);
-	      return o;
-      }
+				o.uv = TRANSFORM_TEX(i.uv, _MainTex);
+				return o;
+			}
 
-      fixed4 frag (v_in i) : SV_Target
-      {
-          fixed4 col = tex2D(_MainTex, i.uv);
-          return col;
-      }
-      ENDCG
+			fixed4 frag (f_in i) : SV_Target {
+				fixed4 col = tex2D(_MainTex, i.uv);
+
+				float ldn = saturate(dot(i.worldNormal, _WorldSpaceLightPos0.xyz));
+				float4 diffuse = _DiffuseIntensity * _LightColor0 * ldn;
+				diffuse *= col;
+				diffuse.a = 1; // dubious
+				float4 ambient = _AmbientIntensity * float4(UNITY_LIGHTMODEL_AMBIENT.rgb * col.rgb, 1);
+				return diffuse + ambient;
+			}
+		ENDCG
 		}
 
 	}

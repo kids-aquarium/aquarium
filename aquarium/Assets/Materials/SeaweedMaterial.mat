@@ -73,11 +73,13 @@ Material:
     - Vector1_4A1F6403: 1
     - Vector1_66C000AD: 100
     - _AlphaClip: 0
+    - _AmbientIntensity: 1.5
     - _Blend: 0
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DiffuseIntensity: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -103,6 +105,6 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Color_B8B68E66: {r: 0.1777768, g: 0.8018868, b: 0.7084126, a: 0.7843137}
-    - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

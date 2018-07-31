@@ -13,7 +13,13 @@
 //    you can call this function inside ProcessFinalImage, don't forget you also should flip mask iamge as well.
 //
 //
-// 2. 
+// 21 June 2018, scanner_enhancement_002.
+//
+// 1. Fixed minor bug that there was offset when user clicked 's' key.
+//
+// 2. Added new 10 fish templates
+//
+// 3. Added new 10 fish masks
 
 
 
@@ -45,7 +51,7 @@ enum SCANNER_MODE { SIMULATION, ACTIVE };
 
 
 [System.Serializable]
-public class AQScannerEvent : UnityEvent<Texture2D> {}
+public class AQScannerEvent : UnityEvent<int,Texture2D> {} // [0.0.3] add fishID for instantiation
 
 
 
@@ -222,13 +228,11 @@ public class AQScanner : MonoBehaviour
 
     private char FILE_SEP; // this is file name separator
     private SCANNER_MODE scannerMode;
-    private bool isScannerReady;
     private bool isFishFileReady;
     private bool isScannerBusy;
     private bool isDebugMode;
     private int fishID;
     private int fishMaskCount;
-    private int lastTime;
     private Rect cameraSize;
     private Rect []codeArea;
     private String maskImageName;
@@ -296,11 +300,9 @@ public class AQScanner : MonoBehaviour
 
     private void initDefaultData()
     {
-        lastTime = 0;
-
         fishID = 0; // if scanner module couldn't found QR code then just use fish 0 as default.
 
-        fishMaskCount = 6;
+        fishMaskCount = 10;
 
 		isFishFileReady = false;
 
@@ -308,7 +310,6 @@ public class AQScanner : MonoBehaviour
         webCam = null;
         scannerThread = null;
         isScannerBusy = false;
-        isScannerReady = true;
 		isDebugMode = false; // use this flag to turn on/off debug mode
 
         scannerMode = SCANNER_MODE.SIMULATION;
@@ -380,7 +381,6 @@ public class AQScanner : MonoBehaviour
 
             webCam.Play();
 
-            isScannerReady = true;
             scannerMode = SCANNER_MODE.ACTIVE;
 
             Debug.Log("camera resolution : " + webCam.width + " , " + webCam.height);
@@ -388,7 +388,6 @@ public class AQScanner : MonoBehaviour
         }
         else
         {
-            isScannerReady = false;
             scannerMode = SCANNER_MODE.SIMULATION;
 
             Debug.Log("the scanner mode is : " + scannerMode + " " + MethodBase.GetCurrentMethod().Name);
@@ -509,7 +508,7 @@ public class AQScanner : MonoBehaviour
                     {-1, -1, -1, -1, -1}
                 };
 
-        strength = 2.0f;
+        strength = 0.5f; //[002] , if you see too bright of QR image then reduce this number. 1.0 is default
         offSet = (1.0f - strength);
         factor = (strength / 16.0f);
 
@@ -651,20 +650,14 @@ public class AQScanner : MonoBehaviour
         int maxX, maxY;
         int finalWidth, finalHeight;
 
-        minX = 1000;
-        minY = 1000;
-
-        maxX = -1000;
-        maxY = -1000;
+        minX = 2000;
+        minY = 2000;
+        
+        maxX = -2000;
+        maxY = -2000;
 
         width = interimImage.width;
         height = interimImage.height;
-
-        //interimImage.reverse();
-
-        interimImage.flip(); // [001] flip 180degree by John. 5 May 2018
-
-        fishMasks[fishID].flip(); // [001] don't forget you need flip mask image as well. by John. 5 May 2018
 
         for (int y = 0; y < height; y++)
         {
@@ -675,7 +668,7 @@ public class AQScanner : MonoBehaviour
 
                 interimImage.SetPixel(x, y, colorOrgImage);
 
-                if (colorOrgImage.a.Equals(0.0f) == false)
+                if (colorOrgImage.a.Equals(0.0f) == false) //[0.0.2] we don't need this anymore but don't delete until the final release. 2018.06.20 John
                 {
                     if (x < minX)
                     {
@@ -700,6 +693,15 @@ public class AQScanner : MonoBehaviour
             }
         }
 
+
+        // [0.0.2] Now we need fixed area for cropping fish image. 2018.06.20 John
+
+        minX = 515;
+        minY = 193;
+
+        maxX = 1501;
+        maxY = 893;
+
         finalImage = null;
 
         finalWidth = (maxX - minX);
@@ -714,6 +716,8 @@ public class AQScanner : MonoBehaviour
                 finalImage.SetPixel((x - minX), (y - minY), interimImage.GetPixel(x, y));
             }
         }
+
+        finalImage.flip(); //[002] make sure we need to flip because of the up vector of the camera. John. 2018.06.15
 
         Debug.Log("The final image is ready!");
         Debug.Log("Done :" + MethodBase.GetCurrentMethod().Name);
@@ -766,8 +770,6 @@ public class AQScanner : MonoBehaviour
     {
         isScannerBusy = true;
 
-        lastTime = Environment.TickCount;
-
         Debug.Log("------ Scanning Started ------------- ");
 
         try
@@ -802,10 +804,10 @@ public class AQScanner : MonoBehaviour
         finalFishTexture = new Texture2D(finalImage.width, finalImage.height, TextureFormat.RGBA32, false);
 
         finalFishTexture.SetPixels(finalImage.GetPixels());
-
+        
         finalFishTexture.Apply();
 
-        fishReadyEvent.Invoke(finalFishTexture);
+        fishReadyEvent.Invoke(fishID,finalFishTexture); // [0.0.3] pass fish ID as well. John. 2018.07.25
 
         // [001] we need to save the raw image from camera when we install this system for the first time.
         // because there is only way to make a fish mask with raw camera image.
@@ -854,6 +856,7 @@ public class AQScanner : MonoBehaviour
             {
                 GUI.DrawTexture(new Rect(0, 0, fishIDTestTexture.width, fishIDTestTexture.height), fishIDTestTexture, ScaleMode.ScaleAndCrop, true);
             }
+
         }
 
     }
