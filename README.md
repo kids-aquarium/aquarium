@@ -1,7 +1,11 @@
-# aquarium v0.0.5
+# aquarium v0.0.6
 Unity parts of the project
 
 ## Changelog
+### v0.0.6
+- 10 different fish breeds, each with their own parameters
+- Spawning animation, volumetric lights, caustics
+
 ### v0.0.5
 - Population management
 - Settings menu and saving and loading preferences
