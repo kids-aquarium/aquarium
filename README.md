@@ -1,7 +1,10 @@
-# aquarium v0.0.6
+# aquarium v0.0.7
 Unity parts of the project
 
 ## Changelog
+### v0.0.7
+- More beautiful and fuller composition
+
 ### v0.0.6
 - 10 different fish breeds, each with their own parameters
 - Spawning animation, volumetric lights, caustics
