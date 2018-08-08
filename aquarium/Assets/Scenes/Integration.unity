@@ -35023,7 +35023,7 @@ MonoBehaviour:
   - {fileID: 1170562045728938, guid: 6a038414b986b44d780accce2bb11d56, type: 2}
   - {fileID: 1205677297034390, guid: 5e87b528df5474dd0a1a97e2773fd6f2, type: 2}
   - {fileID: 1754506424453732, guid: df46a01b3d46d4f748aea555e1c2602d, type: 2}
-  instantiationRadius: 50
+  instantiationRadius: 30
 --- !u!114 &2115303561
 MonoBehaviour:
   m_ObjectHideFlags: 0
