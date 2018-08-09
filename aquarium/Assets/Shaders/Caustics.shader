@@ -22,7 +22,6 @@
 
 			#include "UnityCG.cginc"
 			#include "Lighting.cginc"
-			#include "../Noise Shader/HLSL/ClassicNoise3D.hlsl"
 
 			struct v_in {
 				float4 vertex : POSITION;
@@ -54,6 +53,8 @@
 			{
 				return (v - x0) / (y0 - x0) * (y1 - x1) + x1;
 			}
+
+			#include "ClassicNoise3D.hlslinc"
 
 			f_in vert (v_in i)
 			{
@@ -96,7 +97,8 @@
 				float4 diffuse = _DiffuseIntensity * _LightColor0 * ldn;
 
 				float4 ambient = _AmbientIntensity * float4(UNITY_LIGHTMODEL_AMBIENT.rgb * col.rgb, 1);
-				return col * diffuse + ambient + caustics;
+				return col + caustics;
+				//return col * diffuse + ambient + caustics;
 			}
 			ENDCG
 		}

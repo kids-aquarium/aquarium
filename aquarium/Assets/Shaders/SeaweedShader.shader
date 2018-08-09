@@ -20,7 +20,6 @@
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma multi_compile_fog
-			#pragma addshadow
 
 			#include "UnityCG.cginc"
 			#include "Lighting.cginc"
@@ -77,7 +76,8 @@
 				diffuse *= col;
 				diffuse.a = 1; // dubious
 				float4 ambient = _AmbientIntensity * float4(UNITY_LIGHTMODEL_AMBIENT.rgb * col.rgb, 1);
-				return diffuse + ambient;
+				return col;
+				//return diffuse + ambient;
 			}
 		ENDCG
 		}
