@@ -12,6 +12,7 @@ public class UiKeyHandler : MonoBehaviour {
 	
 	void Update () {
 		if(Input.GetKeyDown(KeyCode.Escape)) {
+            Cursor.visible = !Cursor.visible; // Toggle mouse cursor with the menu
 			foreach(Transform t in transform) t.gameObject.SetActive(!t.gameObject.active);
 			if(fishManager != null) {
 				fishManager.GetComponent<FishFlocker>().SavePreferences();

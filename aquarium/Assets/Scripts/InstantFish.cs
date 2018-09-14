@@ -19,6 +19,7 @@ public class InstantFish : MonoBehaviour {
         steamFileName = null;
 
         streamFishReady = false;
+        Cursor.visible = true; // on startup, menu is open, so keep cursor visible
 	}
 
 	// Update is called once per frame
