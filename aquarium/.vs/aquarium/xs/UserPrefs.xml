@@ -1,8 +1,10 @@
 ﻿<Properties StartupConfiguration="{3D5BA5E2-5D88-064B-769A-27E8467DE1B2}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/AQScanner.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Noise Shader/HLSL/ClassicNoise3D.hlsl">
     <Files>
-      <File FileName="Assets/Scripts/AQScanner.cs" Line="690" Column="1" />
+      <File FileName="Assets/Shaders/Caustics.shader" Line="61" Column="16" />
+      <File FileName="Assets/Shaders/ClassicNoise3D.hlslinc" Line="194" Column="2" />
+      <File FileName="Assets/Noise Shader/HLSL/ClassicNoise3D.hlsl" Line="24" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

@@ -97,7 +97,7 @@ Material:
     - _SwayMax: 0.1
     - _UVSec: 0
     - _WorkflowMode: 1
-    - _XSpeed: 13
+    - _XSpeed: 15
     - _XSwayDepth: 0.005
     - _YOffset: -35
     - _YSpeed: 11
