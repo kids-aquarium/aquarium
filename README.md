@@ -1,7 +1,10 @@
-# aquarium v0.0.7
+# aquarium v0.0.9
 Unity parts of the project
 
 ## Changelog
+### v0.0.9
+- Update camera offsets and cropping masks for final hardware
+
 ### v0.0.8
 - Fix shaders that were broken in build
 - Update to Unity 2018.2.2f1
