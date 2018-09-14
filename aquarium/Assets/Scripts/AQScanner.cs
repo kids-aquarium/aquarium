@@ -668,7 +668,10 @@ public class AQScanner : MonoBehaviour
 
                 interimImage.SetPixel(x, y, colorOrgImage);
 
-                if (colorOrgImage.a.Equals(0.0f) == false) //[0.0.2] we don't need this anymore but don't delete until the final release. 2018.06.20 John
+                /*
+                 * [0.0.2] we don't need this anymore but don't delete until the final release. 2018.06.20 John
+                 * [0.0.4] yes, don't use this for final release. 2018.09.13 John
+                if (colorOrgImage.a.Equals(0.0f) == false) 
                 {
                     if (x < minX)
                     {
@@ -689,18 +692,19 @@ public class AQScanner : MonoBehaviour
                     {
                         maxY = y;
                     }
-                }
+                }*/ 
             }
         }
 
 
         // [0.0.2] Now we need fixed area for cropping fish image. 2018.06.20 John
+        // [0.0.4] New fixed area for final release. 2018.09.13 John
 
-        minX = 515;
-        minY = 193;
+        minX = 461;
+        minY = 236;
 
-        maxX = 1501;
-        maxY = 893;
+        maxX = 1466;
+        maxY = 944;
 
         finalImage = null;
 
@@ -845,16 +849,16 @@ public class AQScanner : MonoBehaviour
         {
             if (finalFishTexture != null)
             {
-				GUI.DrawTexture(new Rect(fishIDTestTexture.width+100, 0, finalFishTexture.width, finalFishTexture.height), finalFishTexture, ScaleMode.ScaleAndCrop, true);
+				GUI.DrawTexture(new Rect(fishIDTestTexture.width+100, 50, finalFishTexture.width, finalFishTexture.height), finalFishTexture, ScaleMode.ScaleAndCrop, true);
             }
             else
             {
-                GUI.DrawTexture(new Rect(0, 0, 1920, 1080), webCam, ScaleMode.ScaleAndCrop, true);
+                GUI.DrawTexture(new Rect(0, 50, 1920, 1080), webCam, ScaleMode.ScaleAndCrop, true);
             }
 
             if (fishIDTestTexture != null)
             {
-                GUI.DrawTexture(new Rect(0, 0, fishIDTestTexture.width, fishIDTestTexture.height), fishIDTestTexture, ScaleMode.ScaleAndCrop, true);
+                GUI.DrawTexture(new Rect(0, 50, fishIDTestTexture.width, fishIDTestTexture.height), fishIDTestTexture, ScaleMode.ScaleAndCrop, true);
             }
 
         }
