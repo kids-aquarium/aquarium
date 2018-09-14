@@ -28,6 +28,10 @@ public class InstantFish : MonoBehaviour {
 			InstantFishWithDefaultTexture(Random.Range(0, 10));
 		}
 
+        if(Input.GetKeyUp(KeyCode.K)) {
+            GetComponent<FishFlocker>().KillNewest();
+        }
+
         if (streamFishReady == true)
         {
             InstantFishFromFile(steamFileName);
