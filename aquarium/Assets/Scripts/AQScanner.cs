@@ -508,7 +508,7 @@ public class AQScanner : MonoBehaviour
                     {-1, -1, -1, -1, -1}
                 };
 
-        strength = 0.5f; //[002] , if you see too bright of QR image then reduce this number. 1.0 is default
+        strength = 0.3f; //[002] , if you see too bright of QR image then reduce this number. 1.0 is default
         offSet = (1.0f - strength);
         factor = (strength / 16.0f);
 
