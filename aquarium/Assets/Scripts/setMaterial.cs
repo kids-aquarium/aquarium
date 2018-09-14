@@ -36,9 +36,9 @@ public class setMaterial : MonoBehaviour {
 	}
 
 	public void LoadTexture2D(Texture2D _tex){
-		fishMaterial = GetComponentsInChildren<Renderer>();
+		fishMaterial = GetComponentsInChildren<SkinnedMeshRenderer>();
 
-        foreach(SkinnedMeshRenderer ren in fishMaterial){
+		foreach(SkinnedMeshRenderer ren in fishMaterial){
 			ren.material.mainTexture = _tex;
 		}
 	}
