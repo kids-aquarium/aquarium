@@ -5,10 +5,6 @@ using UnityEngine;
 
 public class InstantFish : MonoBehaviour {
 
-
-    private string steamFileName;
-    private bool streamFishReady;
-
 	public GameObject prefab;
 	public GameObject[] fishPrefabs = new GameObject[10];
 	public float instantiationRadius = 10.0f;
@@ -16,9 +12,6 @@ public class InstantFish : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        steamFileName = null;
-
-        streamFishReady = false;
         Cursor.visible = true; // on startup, menu is open, so keep cursor visible
 	}
 
@@ -33,11 +26,6 @@ public class InstantFish : MonoBehaviour {
             GetComponent<FishFlocker>().KillNewest();
         }
 
-        if (streamFishReady == true)
-        {
-            InstantFishFromFile(steamFileName);
-        }
-
 	}
 
 	public void InstantFishWithDefaultTexture(int fishID){
@@ -50,16 +38,6 @@ public class InstantFish : MonoBehaviour {
 		newFish.transform.parent = this.transform;
 	}
 
-	public void InstantFishWithTexture(string _textureName){
-		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
-		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
-		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Vector3.up);
-		GameObject newFish = Instantiate(prefab, transform.position + positionOffset, transform.rotation * rotationOffset);
-		newFish.GetComponent<setMaterial>().LoadTexture(_textureName);
-		newFish.GetComponent<FlockingFish>().SetBreed(3);
-		newFish.transform.parent = this.transform;
-	}
-
 	public void InstantFishWithTexture2D(int fishID, Texture2D tex){
 		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
 		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
@@ -69,26 +47,5 @@ public class InstantFish : MonoBehaviour {
 		newFish.GetComponent<FlockingFish>().SetBreed(fishID);
 		newFish.transform.parent = this.transform;
 	}
-
-	public void InstantFishFromFile(string filepath)
-    {
-		Vector3 positionOffset = Random.insideUnitSphere * instantiationRadius;
-		// Quaternion rotationOffset = Quaternion.AngleAxis (90.0f, Vector3.up);
-		Quaternion rotationOffset = Quaternion.AngleAxis (Random.value * 360.0f, Vector3.up);
-		GameObject newFish = Instantiate(prefab, transform.position + positionOffset, transform.rotation * rotationOffset);
-		newFish.GetComponent<setMaterial>().LoadTextureF(filepath);
-		newFish.transform.parent = this.transform;
-
-        streamFishReady = false; //John
-	}
-
-    public void SetStreamFishReady(string name) // John , this is called by FileWatcher thread
-    {
-        steamFileName = name;
-
-        Debug.Log("SetStreamFishReady done");
-
-        streamFishReady = true; // tell mainthread to read png file
-    }
 
 }
