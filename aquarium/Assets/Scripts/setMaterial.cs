@@ -8,8 +8,6 @@ public class setMaterial : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-		// LoadTexture("fishTexTest004");
 		
 	}
 	
@@ -19,9 +17,9 @@ public class setMaterial : MonoBehaviour {
 	}
 
 	public void LoadTexture(string _texture){
-		fishMaterial = GetComponentsInChildren<Renderer>();
+		fishMaterial = GetComponentsInChildren<SkinnedMeshRenderer>();
 
-		foreach(Renderer rend in fishMaterial){
+		foreach(SkinnedMeshRenderer rend in fishMaterial){
 			Texture t = Resources.Load(_texture) as Texture;
 			
 			if (t == null)
