@@ -1,7 +1,12 @@
-# aquarium v0.0.9
+# aquarium v1.0.0
 Unity parts of the project
 
 ## Changelog
+### v1.0.0
+- Add kill newest fish functionality
+- Cleanup unused code
+- Update to Unity 2018.2.8f1
+
 ### v0.0.9
 - Update camera offsets and cropping masks for final hardware
 
@@ -25,7 +30,7 @@ Unity parts of the project
 - Swaying seaweed
 
 ## Requirements
-Unity 2018.2.6f1
+Unity 2018.2.8f1
 
 ## Development workflow
 Branch off `develop`, submit pull requests against `develop`. PRs must be tested before merging. `master` should contain only releases – will be pushed and versioned by the administrator.
